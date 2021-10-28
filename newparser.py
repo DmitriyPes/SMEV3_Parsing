@@ -496,7 +496,6 @@ def newparser():
     dest_mail = str(dest_mail)
     print("Производится отправка сообщения...")
     send_email(smev3_news + next_smev3_news, dest_mail)
-    """
     input("Нажмите Enter для выхода")
 
 
