@@ -1,5 +1,8 @@
 # -*- coding: cp1251 -*-
+import filecmp
+import zip_unicode
 import os
+import io
 from selenium import webdriver
 import time
 from bs4 import BeautifulSoup
@@ -25,8 +28,13 @@ from difflib import SequenceMatcher
 import email
 import email.mime.application
 import mimetypes
+import locale
+from tempfile import mkdtemp
+import zipfile
 import ntpath
 import datetime
+import shutil
+import docx
 """
 from selenium.webdriver import ActionChains
 
@@ -37,6 +45,7 @@ actions.move_to_element(element).click().perform()
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 chromedriver = ROOT_DIR + r"\chromedriver"
 files_to_send = []
+info_comp = []
 
 class web:
 
@@ -53,7 +62,7 @@ class web:
         self.filter_word = ''
 
     def set_options(self):
-        # self.options.add_argument('headless')
+        self.options.add_argument('headless')
         self.options.add_argument("--start-maximized")
         self.options.add_experimental_option("prefs", self.preferences)
         self.options.add_experimental_option('prefs', {
@@ -72,7 +81,7 @@ class web:
         print('Отключение от сайта ' + self.link)
         try:
             self.browser.close()
-            print('Отключение прошло успешною')
+            print('Отключение прошло успешно.')
         except WebDriverException:
             print('Произошла ошибка при отключении: ' + traceback.format_exc())
             input("Для продолжения нажмите Enter")
@@ -176,6 +185,12 @@ def get_newsname(html):
     name = '<h3> ' + 'Новость содержит информацию о следующем ВС - ' + name + ' </h3>'
     return name
 
+def make_html_text(text_list):
+    name = ['<h2>']
+    for text in text_list:
+        name.append(text + ' ' + '\n')
+    name.append('</h2>')
+    return name
 
 def check_vs(vs_info, name):
     for code, vs_name in vs_info.items():
@@ -237,6 +252,65 @@ def check_jkh(name):
     f.write(name + '\n')
     return True
 
+def renamed(dirpath, names, encoding):
+    new_names = [old.encode('cp437').decode(encoding) for old in names]
+    for old, new in zip(names, new_names):
+        os.rename(os.path.join(dirpath, old), os.path.join(dirpath, new))
+    return new_names
+
+def comparing():
+    files_in_dir = []
+    for root, dirs, files in os.walk(str(ROOT_DIR) + r"\downloads"):
+        for filename in files:
+            if check_temp(filename):
+                for dir_file in files_in_dir:
+                    if similar(filename, dir_file) >= 0.7:
+                        if filename.endswith('.zip') & dir_file.endswith('.zip'):
+                            if filecmp.cmp(str(ROOT_DIR) + r"\downloads\\" + filename,
+                                           str(ROOT_DIR) + r"\downloads\\" + dir_file, shallow=False) is False:
+                                z1 = zipfile.ZipFile(str(ROOT_DIR) + r"\downloads\\" + filename, "r")
+                                z2 = zipfile.ZipFile(str(ROOT_DIR) + r"\downloads\\" + dir_file, "r")
+                                z1.extractall(str(ROOT_DIR) + r"\downloads\\" + filename.replace('.zip', ''))
+                                z2.extractall(str(ROOT_DIR) + r"\downloads\\" + dir_file.replace('.zip', ''))
+                                dcmp = filecmp.dircmp(str(ROOT_DIR) + r"\downloads\\" + filename.replace('.zip', ''),
+                                                      str(ROOT_DIR) + r"\downloads\\" + dir_file.replace('.zip', ''))
+                                if dcmp.left_only != []:
+                                    for lefts in dcmp.left_only:
+                                        info_comp.append('В архиве ' + filename + 'присутсвует файл ' + lefts + ', который отсутсвует в ' + dir_file)
+                                if dcmp.right_only != []:
+                                    for rights in dcmp.right_only:
+                                        info_comp.append('В архиве ' + dir_file + 'присутсвует файл ' + rights + ', который отсутсвует в ' + filename)
+                                for z_root, z_dirs, z_files in os.walk(str(ROOT_DIR) + r"\downloads\\" +
+                                                                       filename.replace('.zip', '')):
+                                    for z_file in z_files:
+                                        for z2root, z2dirs, z2files in os.walk(
+                                                str(ROOT_DIR) + r"\downloads\\" + dir_file.replace('.zip', '')):
+                                            for z2file in z2files:
+                                                if similar(z_file, z2file) >= 0.7:
+                                                    if z_file.endswith('.docx') & z2file.endswith('.docx'):
+                                                        try:
+                                                            compare_name = ntpath.basename(compare_docs(z_file, z2file,
+                                                                         str(ROOT_DIR) + r"\downloads\\" + filename.replace(
+                                                                             '.zip', '') + r'\\',
+                                                                         str(ROOT_DIR) + r"\downloads\\" + dir_file.replace(
+                                                                             '.zip', '') + r'\\'))
+                                                            info_comp.append(
+                                                                'В архиве ' + dir_file + 'обнаружены изменения файла ' + z_file + ' изменения записаны в прикрепленный файл ' + compare_name)
+                                                        except:
+                                                            print(traceback.format_exc())
+                            shutil.rmtree(str(ROOT_DIR) + r"\downloads\\" + filename.replace('.zip', ''))
+                            shutil.rmtree(str(ROOT_DIR) + r"\downloads\\" + dir_file.replace('.zip', ''))
+                        else:
+                            if filename.endswith('.docx') & dir_file.endswith('.docx'):
+                                try:
+
+                                    info_comp.append('В файле ' + filename + ' присутсвуют изменения, которые записаны в файл ' + ntpath.basename(compare_docs(filename, dir_file, str(ROOT_DIR) + r"\downloads\\",
+                                                 str(ROOT_DIR) + r"\downloads\\")))
+                                except:
+                                    print(traceback.format_exc())
+                files_in_dir.append(filename)
+
+
 def get_content(html):
     news = []
     if html.link == 'https://smev3.gosuslugi.ru/portal':
@@ -265,15 +339,6 @@ def get_content(html):
                     news_body = (str(news_body) + ''.join(map(str, tmps[i]))).replace('\n', '')
                 if check_news(news_body) is True:
                     news.append(tmps)
-        files_in_dir = []
-        for root, dirs, files in os.walk(str(ROOT_DIR) + r"\downloads"):
-            for filename in files:
-                if check_temp(filename):
-                    for dir_file in files_in_dir:
-                        if similar(filename, dir_file) >= 0.7:
-                            compare_docs(filename, dir_file)
-                    files_in_dir.append(filename)
-        return news
     if html.link == 'https://smev3.gosuslugi.ru/portal/news.jsp':
         path = str(ROOT_DIR) + r"\information" + r"\Виды сведений.xlsx"
         vs_info = excel_connect(path)
@@ -348,7 +413,6 @@ def get_content(html):
                     break
             i += 1
             time.sleep(0.1)
-        return news
     if html.link == 'https://fssp.gov.ru/mvv_fssp/':
         soup = BeautifulSoup(html.get_html_text(), "lxml")
         items = soup.find("div", {"class": "b-responsive-table"})
@@ -378,7 +442,7 @@ def get_content(html):
     if html.link == 'https://pfr.gov.ru/info/af/':
         soup = BeautifulSoup(html.get_html_text(), "lxml")
         items = soup.find("div", {"id": "accordion"})
-        tmp = 'Альбомформатов 2.64д'
+        tmp = ('Альбомформатов 2.65д')
         for a in items.find_all('a', href=True):
             if re.sub("^\s+|\n|\r|\s+$", '', a.text).replace('	', '').startswith(tmp):
                 open_tab(html, 'https://pfr.gov.ru' + a['href'], False)
@@ -428,6 +492,11 @@ def send_email(news, toaddr):
 
     server.sendmail(email_str, toaddr, msg.as_string())
     print("Сообщение успешно отправлено")
+
+    if files_to_send != []:
+        for file_n in files_to_send:
+            os.remove(file_n)
+
     server.quit()
 
 
@@ -447,10 +516,10 @@ def check_temp(name):
 def similar(a, b):
     return SequenceMatcher(None, a, b).ratio()
 
-def compare_docs(doc1, doc2):
-    path = str(ROOT_DIR) + "\downloads\\"
+def compare_docs(doc1, doc2, path1 , path2):
+    path = str(ROOT_DIR) + r"\downloads\\"
     word = win32com.client.Dispatch("Word.application")
-    word.CompareDocuments(word.Documents.Open(path + str(doc1)), word.Documents.Open(path + str(doc2)))
+    word.CompareDocuments(word.Documents.Open(path1 + str(doc1)), word.Documents.Open(path2 + str(doc2)))
     doc1 = str(doc1).replace(".docx", '')
     doc2 = str(doc2).replace(".docx", '')
     word.ActiveDocument.ActiveWindow.View.Type = 3
@@ -460,7 +529,14 @@ def compare_docs(doc1, doc2):
     word.Quit()
     return file_name
 
+def init_delete():
+    for root, dirs, files in os.walk(str(ROOT_DIR) + r"\downloads"):
+        for filename in files:
+            if filename.endswith("_Comparison.docx"):
+                os.remove(str(ROOT_DIR) + r"\downloads\\" + filename)
+
 def newparser():
+    init_delete()
     html = web('https://smev3.gosuslugi.ru/portal')
     smev3_news = get_content(html)
     del html
@@ -492,11 +568,11 @@ def newparser():
     html_4 = web('https://pfr.gov.ru/info/af/')
     get_content(html_4)
     del html_4
+    comparing()
     dest_mail = input("Введите почту получателя: ")
     dest_mail = str(dest_mail)
     print("Производится отправка сообщения...")
-    send_email(smev3_news + next_smev3_news, dest_mail)
+    send_email(make_html_text(info_comp) + smev3_news + next_smev3_news, dest_mail)
     input("Нажмите Enter для выхода")
-
 
 newparser()
