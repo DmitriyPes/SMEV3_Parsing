@@ -1,8 +1,13 @@
-# -*- coding: cp1251 -*-
+# -*- coding: UTF-8 -*-
+import codecs
+import configparser
 import filecmp
+import ast
 import zip_unicode
 import os
+import tempfile
 import io
+from pathlib import Path
 from selenium import webdriver
 import time
 from bs4 import BeautifulSoup
@@ -13,6 +18,7 @@ from email.mime.application import MIMEApplication
 import re
 import traceback
 from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import WebDriverException
 from selenium.common.exceptions import ElementClickInterceptedException
@@ -33,6 +39,7 @@ from tempfile import mkdtemp
 import zipfile
 import ntpath
 import datetime
+from smtplib import SMTPDataError
 import shutil
 import docx
 """
@@ -62,7 +69,7 @@ class web:
         self.filter_word = ''
 
     def set_options(self):
-        self.options.add_argument('headless')
+        #self.options.add_argument('headless')
         self.options.add_argument("--start-maximized")
         self.options.add_experimental_option("prefs", self.preferences)
         self.options.add_experimental_option('prefs', {
@@ -78,27 +85,25 @@ class web:
                             "safebrowsing.enabled": "false"}
 
     def close_connection(self):
-        print('Отключение от сайта ' + self.link)
+        print('РћС‚РєР»СЋС‡РµРЅРёРµ РѕС‚ СЃР°Р№С‚Р° ' + self.link)
         try:
             self.browser.close()
-            print('Отключение прошло успешно.')
+            print('РћС‚РєР»СЋС‡РµРЅРёРµ РїСЂРѕС€Р»Рѕ СѓСЃРїРµС€РЅРѕ.')
         except WebDriverException:
-            print('Произошла ошибка при отключении: ' + traceback.format_exc())
-            input("Для продолжения нажмите Enter")
+            print('РџСЂРѕРёР·РѕС€Р»Р° РѕС€РёР±РєР° РїСЂРё РѕС‚РєР»СЋС‡РµРЅРёРё РѕС‚ СЃР°Р№С‚Р° ', self.link)
     def get_html_text(self):
         return self.browser.page_source
 
     def connection(self, link):
-        print("Подключение к сайту " + link + "...")
+        print("РџРѕРґРєР»СЋС‡РµРЅРёРµ Рє СЃР°Р№С‚Сѓ " + link + "...")
         try:
             self.browser.get(link)
             time.sleep(1)
-            print("Подключение прошло успешно")
+            print("РџРѕРґРєР»СЋС‡РµРЅРёРµ РїСЂРѕС€Р»Рѕ СѓСЃРїРµС€РЅРѕ")
+            return self.browser.page_source
         except WebDriverException:
-            print("Возникла ошибка при подключении:")
-            print(traceback.format_exc())
-            input("Для продолжения нажмите Enter")
-        return self.browser.page_source
+            print("Р’РѕР·РЅРёРєР»Р° РѕС€РёР±РєР° РїСЂРё РїРѕРґРєР»СЋС‡РµРЅРёРё Рє СЃР°Р№С‚Сѓ ", self.link)
+            return ''
 
     def __del__(self):
         self.close_connection()
@@ -110,8 +115,8 @@ def excel_connect(path):
     pandas.set_option('display.max_colwidth', None)
 
     vs_info = pandas.read_excel(path, index_col=None, na_values=['NA'], usecols="F,E")
-    vs_info_dict = vs_info.set_index('Код').to_dict()
-    vs_info_dict = vs_info_dict['Название Сервиса(ВС) в СМЭВ']
+    vs_info_dict = vs_info.set_index('РљРѕРґ').to_dict()
+    vs_info_dict = vs_info_dict['РќР°Р·РІР°РЅРёРµ РЎРµСЂРІРёСЃР°(Р’РЎ) РІ РЎРњР­Р’']
     return vs_info_dict
 
 
@@ -121,7 +126,7 @@ def edit_news(item):
     item = re.sub(r'<a class="collapsed" data-parent="#accordion" data-toggle="collapse" >',
                   '<span style="color:#FF0000" class="collapsed" data-parent="#accordion" data-toggle="collapse" >',
                   str(item))
-    item = re.sub(r'</a></h2>', '</span></h2>', str(item))
+    item = re.sub(r'</a></h3>', '</span> </h2>', str(item))
     return item
 
 
@@ -167,7 +172,7 @@ def open_tab(html, link, need_name):
         html.browser.get(link)
         time.sleep(0.1)
     except:
-        print(traceback.format_exc())
+        main_window = ''
     if need_name is True:
         name = get_newsname(html)
     html.browser.close()
@@ -178,11 +183,15 @@ def open_tab(html, link, need_name):
 
 
 def get_newsname(html):
-    wait = WebDriverWait(html.browser, 10, poll_frequency=1, ignored_exceptions=[NoSuchElementException, StaleElementReferenceException])
-    element = wait.until(EC.presence_of_element_located((By.XPATH, '//*[@id="infotable"]/table/tbody/tr[1]')))
-    name = element.text
-    name = re.sub(r'Наименование ', '', str(name))
-    name = '<h3> ' + 'Новость содержит информацию о следующем ВС - ' + name + ' </h3>'
+    try:
+        element = WebDriverWait(html.browser, 10).until(
+            EC.presence_of_element_located((By.XPATH, '//*[@id="infotable"]/table/tbody/tr[1]'))
+        )
+        name = element.text
+        name = re.sub(r'РќР°РёРјРµРЅРѕРІР°РЅРёРµ ', '', str(name))
+        name = '<h3> ' + 'РќРѕРІРѕСЃС‚СЊ СЃРѕРґРµСЂР¶РёС‚ РёРЅС„РѕСЂРјР°С†РёСЋ Рѕ СЃР»РµРґСѓСЋС‰РµРј Р’РЎ - ' + name + ' </h3>'
+    except TimeoutException:
+        name = ''
     return name
 
 def make_html_text(text_list):
@@ -193,10 +202,11 @@ def make_html_text(text_list):
     return name
 
 def check_vs(vs_info, name):
-    for code, vs_name in vs_info.items():
-        if name == vs_name:
-            return code
-        return ""
+    tmp = (name.replace('<h3> РќРѕРІРѕСЃС‚СЊ СЃРѕРґРµСЂР¶РёС‚ РёРЅС„РѕСЂРјР°С†РёСЋ Рѕ СЃР»РµРґСѓСЋС‰РµРј Р’РЎ - ', '')).replace(' </h3>', '')
+    for vs_name in vs_info.items():
+        if tmp == vs_name[1]:
+            return vs_name[0]
+    return ""
 
 def check_news(name):
     if os.stat(str(ROOT_DIR) + r"\information" + r"\news.txt").st_size == 0:
@@ -220,12 +230,17 @@ def get_xml(html, link):
         html.browser.get(link)
         time.sleep(0.1)
     except:
-        print(traceback.format_exc())
+        main_window = ''
     xml = html.browser.find_element_by_xpath('/html/body/pre')
     make_file(xml.text)
     html.browser.close()
     html.browser.switch_to.window(main_window)
     time.sleep(0.1)
+
+def get_files(input):
+    for fd, subfds, fns in os.walk(input):
+       for fn in fns:
+            yield os.path.join(fd, fn)
 
 def compare_files_with_text(text):
     for filename in os.listdir(str(ROOT_DIR) + r"\downloads"):
@@ -258,56 +273,64 @@ def renamed(dirpath, names, encoding):
         os.rename(os.path.join(dirpath, old), os.path.join(dirpath, new))
     return new_names
 
+def change_name(name):
+    import chardet
+    try:
+        name = name.encode('cp437')
+    except UnicodeEncodeError:
+        name = name.encode('utf8')
+    encoding = chardet.detect(name)['encoding']
+    name = name.decode(encoding)
+    return name
+
 def comparing():
     files_in_dir = []
     for root, dirs, files in os.walk(str(ROOT_DIR) + r"\downloads"):
         for filename in files:
             if check_temp(filename):
                 for dir_file in files_in_dir:
-                    if similar(filename, dir_file) >= 0.7:
+                    if similar(filename, dir_file) >= 0.9:
                         if filename.endswith('.zip') & dir_file.endswith('.zip'):
                             if filecmp.cmp(str(ROOT_DIR) + r"\downloads\\" + filename,
                                            str(ROOT_DIR) + r"\downloads\\" + dir_file, shallow=False) is False:
-                                z1 = zipfile.ZipFile(str(ROOT_DIR) + r"\downloads\\" + filename, "r")
-                                z2 = zipfile.ZipFile(str(ROOT_DIR) + r"\downloads\\" + dir_file, "r")
-                                z1.extractall(str(ROOT_DIR) + r"\downloads\\" + filename.replace('.zip', ''))
-                                z2.extractall(str(ROOT_DIR) + r"\downloads\\" + dir_file.replace('.zip', ''))
-                                dcmp = filecmp.dircmp(str(ROOT_DIR) + r"\downloads\\" + filename.replace('.zip', ''),
-                                                      str(ROOT_DIR) + r"\downloads\\" + dir_file.replace('.zip', ''))
-                                if dcmp.left_only != []:
-                                    for lefts in dcmp.left_only:
-                                        info_comp.append('В архиве ' + filename + 'присутсвует файл ' + lefts + ', который отсутсвует в ' + dir_file)
-                                if dcmp.right_only != []:
-                                    for rights in dcmp.right_only:
-                                        info_comp.append('В архиве ' + dir_file + 'присутсвует файл ' + rights + ', который отсутсвует в ' + filename)
-                                for z_root, z_dirs, z_files in os.walk(str(ROOT_DIR) + r"\downloads\\" +
-                                                                       filename.replace('.zip', '')):
-                                    for z_file in z_files:
-                                        for z2root, z2dirs, z2files in os.walk(
-                                                str(ROOT_DIR) + r"\downloads\\" + dir_file.replace('.zip', '')):
-                                            for z2file in z2files:
-                                                if similar(z_file, z2file) >= 0.7:
-                                                    if z_file.endswith('.docx') & z2file.endswith('.docx'):
-                                                        try:
-                                                            compare_name = ntpath.basename(compare_docs(z_file, z2file,
-                                                                         str(ROOT_DIR) + r"\downloads\\" + filename.replace(
-                                                                             '.zip', '') + r'\\',
-                                                                         str(ROOT_DIR) + r"\downloads\\" + dir_file.replace(
-                                                                             '.zip', '') + r'\\'))
-                                                            info_comp.append(
-                                                                'В архиве ' + dir_file + 'обнаружены изменения файла ' + z_file + ' изменения записаны в прикрепленный файл ' + compare_name)
-                                                        except:
-                                                            print(traceback.format_exc())
-                            shutil.rmtree(str(ROOT_DIR) + r"\downloads\\" + filename.replace('.zip', ''))
-                            shutil.rmtree(str(ROOT_DIR) + r"\downloads\\" + dir_file.replace('.zip', ''))
+                                if dir_file.startswith('AF.2.65d') or filename.startswith('AF.2.65d'):
+                                    info_comp.append('Р’ Р°СЂС…РёРІРµ ' + filename + ' Р·Р°РјРµС‡РµРЅС‹ РёР·РјРµРЅРµРёСЏ.')
+                                else:
+                                    z1_u = zip_unicode.ZipHandler(str(ROOT_DIR) + r"\downloads\\" + filename)
+                                    z2_u = zip_unicode.ZipHandler(str(ROOT_DIR) + r"\downloads\\" + dir_file)
+                                    z1_u.extract_all()
+                                    z2_u.extract_all()
+                                    dcmp = filecmp.dircmp(str(ROOT_DIR) + r"\downloads\\" + filename.replace('.zip', ''),
+                                                          str(ROOT_DIR) + r"\downloads\\" + dir_file.replace('.zip', ''))
+                                    if dcmp.left_only != []:
+                                        for lefts in dcmp.left_only:
+                                            info_comp.append('Р’ Р°СЂС…РёРІРµ ' + filename + ' РїСЂРёСЃСѓС‚СЃРІСѓРµС‚ С„Р°Р№Р» ' + lefts + ', РєРѕС‚РѕСЂС‹Р№ РѕС‚СЃСѓС‚СЃРІСѓРµС‚ РІ ' + dir_file + ' ' + '\n')
+                                    if dcmp.right_only != []:
+                                        for rights in dcmp.right_only:
+                                            info_comp.append('Р’ Р°СЂС…РёРІРµ ' + dir_file + 'РїСЂРёСЃСѓС‚СЃРІСѓРµС‚ С„Р°Р№Р» ' + rights + ', РєРѕС‚РѕСЂС‹Р№ РѕС‚СЃСѓС‚СЃРІСѓРµС‚ РІ ' + filename + ' ' + '\n')
+                                    for fd, subfds, fns in os.walk(str(ROOT_DIR) + r"\downloads\\" +
+                                                                           filename.replace('.zip', '')):
+                                        for fn in fns:
+                                            for fd2, subfds2, fns2 in os.walk(str(ROOT_DIR) + r"\downloads\\" + dir_file.replace('.zip', '')):
+                                                for fn2 in fns2:
+                                                    if similar(fn, fn2) >= 0.95:
+                                                        if filecmp.cmp(os.path.join(fd,fn),
+                                                                       os.path.join(fd2, fn2),
+                                                                       shallow=False) is False:
+                                                            if fn.endswith('.docx') & fn2.endswith('.docx') & (fn.endswith('_Comparison.docx') is False) & (fn2.endswith('_Comparison.docx') is False) & (fn.startswith('~$') is False) & (fn2.startswith('~$') is False):
+                                                                compare_name = ntpath.basename(compare_docs(fn, fn2, os.path.join(fd,fn),os.path.join(fd2, fn2)))
+                                                                info_comp.append(
+                                                                    'Р’ Р°СЂС…РёРІРµ ' + dir_file + ' РѕР±РЅР°СЂСѓР¶РµРЅС‹ РёР·РјРµРЅРµРЅРёСЏ С„Р°Р№Р»Р° ' + fn + ' РёР·РјРµРЅРµРЅРёСЏ Р·Р°РїРёСЃР°РЅС‹ РІ РїСЂРёРєСЂРµРїР»РµРЅРЅС‹Р№ С„Р°Р№Р» ' + compare_name + '\n')
+                                shutil.rmtree(str(ROOT_DIR) + r"\downloads\\" + filename.replace('.zip', ''))
+                                shutil.rmtree(str(ROOT_DIR) + r"\downloads\\" + dir_file.replace('.zip', ''))
+                            else:
+                                os.remove(str(ROOT_DIR) + r"\downloads\\" + filename)
                         else:
-                            if filename.endswith('.docx') & dir_file.endswith('.docx'):
+                            if filename.endswith('.docx') & dir_file.endswith('.docx') & (filename.endswith('_Comparison.docx') is False) & (dir_file.endswith('_Comparison.docx') is False):
                                 try:
-
-                                    info_comp.append('В файле ' + filename + ' присутсвуют изменения, которые записаны в файл ' + ntpath.basename(compare_docs(filename, dir_file, str(ROOT_DIR) + r"\downloads\\",
-                                                 str(ROOT_DIR) + r"\downloads\\")))
+                                    info_comp.append('Р’ С„Р°Р№Р»Рµ ' + filename + ' РїСЂРёСЃСѓС‚СЃС‚РІСѓСЋС‚ РёР·РјРµРЅРµРЅРёСЏ, РєРѕС‚РѕСЂС‹Рµ Р·Р°РїРёСЃР°РЅС‹ РІ С„Р°Р№Р» ' + ntpath.basename(compare_docs(change_name(filename), change_name(dir_file), str(ROOT_DIR) + r"\downloads\\" , str(ROOT_DIR) + r"\downloads\\")) + '\n')
                                 except:
-                                    print(traceback.format_exc())
+                                    print("Р’РѕР·РЅРёРєР»Р° РѕС€РёР±РєР° РїСЂРё СЂР°Р±РѕС‚Рµ СЃ С„Р°Р№Р»Р°РјРё ", filename, ' Рё ', dir_file)
                 files_in_dir.append(filename)
 
 
@@ -340,8 +363,12 @@ def get_content(html):
                 if check_news(news_body) is True:
                     news.append(tmps)
     if html.link == 'https://smev3.gosuslugi.ru/portal/news.jsp':
-        path = str(ROOT_DIR) + r"\information" + r"\Виды сведений.xlsx"
-        vs_info = excel_connect(path)
+        try:
+            path = str(ROOT_DIR) + r"\information" + r"\Р’РёРґС‹ СЃРІРµРґРµРЅРёР№.xlsx"
+            vs_info = excel_connect(path)
+        except:
+            path = ''
+            vs_info = ''
         i = 2
         while True:
             xpath = '/html/body/div/div/div/div/div[1]/div/div[1]/div[2]/ul/li[i]/a'
@@ -358,16 +385,17 @@ def get_content(html):
                     for a in item.find_all('a', href=True):
                         if a.text:
                             if str(a['href']).startswith('https://smev3.gosuslugi.ru') == True:
-                                links_with_text.append(a['href'])
+                                if(similar(a.text, "СЃСЃС‹Р»РєРµ") >= 0.9):
+                                    links_with_text.append(a['href'])
                     if links_with_text != []:
                         name = open_tab(html, links_with_text[0], True)
                     else:
                         name = ''
                     vs_add = check_vs(vs_info, name)
                     if vs_add != '':
-                        name = name + "Данные найдены в таблице видов сведений со следующим кодом - " + vs_add
+                        name = name + "Р”Р°РЅРЅС‹Рµ РЅР°Р№РґРµРЅС‹ РІ С‚Р°Р±Р»РёС†Рµ РІРёРґРѕРІ СЃРІРµРґРµРЅРёР№ СЃРѕ СЃР»РµРґСѓСЋС‰РёРј РєРѕРґРѕРј - " + vs_add
                     else:
-                        name = name + "Данные не найдены в таблице видов сведений"
+                        name = name + "Р”Р°РЅРЅС‹Рµ РЅРµ РЅР°Р№РґРµРЅС‹ РІ С‚Р°Р±Р»РёС†Рµ РІРёРґРѕРІ СЃРІРµРґРµРЅРёР№"
                     news_body = ''
                     if html.filter == True:
                         if item.get_text().find(html.filter_word) != -1:
@@ -381,14 +409,13 @@ def get_content(html):
                         if check_news(news_body) is True:
                             news.append(name + ' ' + main_news)
             except (NoSuchElementException, ElementClickInterceptedException, TimeoutException):
-                print(traceback.format_exc())
                 break
             i += 1
             time.sleep(0.1)
     if html.link == 'https://dom.gosuslugi.ru/#!/regulations':
         i = 1
         j = 2
-        tmp = "Регламент и форматы информационного взаимодействия внешних информационных систем с ГИС ЖКХ (текущие форматы"
+        tmp = "Р РµРіР»Р°РјРµРЅС‚ Рё С„РѕСЂРјР°С‚С‹ РёРЅС„РѕСЂРјР°С†РёРѕРЅРЅРѕРіРѕ РІР·Р°РёРјРѕРґРµР№СЃС‚РІРёСЏ РІРЅРµС€РЅРёС… РёРЅС„РѕСЂРјР°С†РёРѕРЅРЅС‹С… СЃРёСЃС‚РµРј СЃ Р“РРЎ Р–РљРҐ (С‚РµРєСѓС‰РёРµ"
         while True:
             xpath = '// *[ @ id = "rubric_9}"] / div[1] / div[i] / div / div / div / div[1] / div[1] / a'
             xpath = xpath.replace('[i]', '[' + str(i) + ']')
@@ -399,7 +426,7 @@ def get_content(html):
                     if check_jkh(element.text) is True:
                         element.click()
                         downloads_done()
-            except (NoSuchElementException, ElementClickInterceptedException, TimeoutException):
+            except:
                 break
             if i == 5:
                 i = 0
@@ -409,7 +436,7 @@ def get_content(html):
                     element = html.browser.find_element_by_xpath(xpath)
                     element.click()
                     time.sleep(0.1)
-                except (NoSuchElementException, ElementClickInterceptedException, TimeoutException):
+                except:
                     break
             i += 1
             time.sleep(0.1)
@@ -422,14 +449,14 @@ def get_content(html):
         for tr in trs:
             tds = tr.find_all('td')
             for td in tds:
-                test = 'Запросы должностных лиц ФССП России и ответы на них'
+                test = 'Р—Р°РїСЂРѕСЃС‹ РґРѕР»Р¶РЅРѕСЃС‚РЅС‹С… Р»РёС† Р¤РЎРЎРџ Р РѕСЃСЃРёРё Рё РѕС‚РІРµС‚С‹ РЅР° РЅРёС…'
                 if similar(test, td.text) >= 0.95:
                     td_check = True
                 else:
                     if td_check is True:
                         for a in td.find_all('a', href=True):
-                            test1 = 'загрузить pdf'
-                            test2 = 'загрузить xsd'
+                            test1 = 'Р·Р°РіСЂСѓР·РёС‚СЊ pdf'
+                            test2 = 'Р·Р°РіСЂСѓР·РёС‚СЊ xsd'
                             if similar(a.text,test1) >= 0.9:
                                 regex = r'[^/\\&\?]+\.\w{3,4}(?=([\?&].*$|$))'
                                 file_name = re.search(regex, a['href']).group(0)
@@ -442,7 +469,7 @@ def get_content(html):
     if html.link == 'https://pfr.gov.ru/info/af/':
         soup = BeautifulSoup(html.get_html_text(), "lxml")
         items = soup.find("div", {"id": "accordion"})
-        tmp = ('Альбомформатов 2.65д')
+        tmp = ('РђР»СЊР±РѕРјС„РѕСЂРјР°С‚РѕРІ 2.65Рґ')
         for a in items.find_all('a', href=True):
             if re.sub("^\s+|\n|\r|\s+$", '', a.text).replace('	', '').startswith(tmp):
                 open_tab(html, 'https://pfr.gov.ru' + a['href'], False)
@@ -461,9 +488,9 @@ def downloads_done():
             downloads_done()
 
 
-def send_email(news, toaddr):
-    email_str = 'tesmail.test@yandex.ru'
-    password = 'Pinkuin5'
+def send_email(news, toaddr, subject, msg_type, sender, passw):
+    email_str = sender
+    password = passw
 
     server = smtplib.SMTP('smtp.yandex.ru', 587)
     server.set_debuglevel(False)
@@ -471,34 +498,36 @@ def send_email(news, toaddr):
     server.starttls()
     server.login(email_str, password)
 
-    from_addr = 'tesmail.test@yandex.ru'
+    from_addr = email_str
     msg_body = '<html> <body>'
     for i in range(0, len(news)):
         msg_body = str(msg_body) + ''.join(map(str, news[i]))
     msg_body = str(msg_body) + '</body></html>'
-
     msg = MIMEMultipart('alternative')
     part = MIMEText(str(msg_body), 'html', 'utf-8')
     msg.attach(part)
-    msg['Subject'] = 'Это письмо от Песоцкого Дмитрия'
+    msg['Subject'] = subject
     msg['From'] = from_addr
     msg['To'] = toaddr
-
-    if files_to_send != []:
-        for file_n in files_to_send:
-            attach = MIMEApplication(open(file_n, 'rb').read())
-            attach.add_header('Content-Disposition', 'attachment', filename = ntpath.basename(file_n))
-            msg.attach(attach)
-
-    server.sendmail(email_str, toaddr, msg.as_string())
-    print("Сообщение успешно отправлено")
-
-    if files_to_send != []:
-        for file_n in files_to_send:
-            os.remove(file_n)
-
+    if msg_type == "comparing":
+        if files_to_send != []:
+            for file_n in files_to_send:
+                attach = MIMEApplication(open(file_n, 'rb').read())
+                attach.add_header('Content-Disposition', 'attachment', filename = ntpath.basename(file_n))
+                msg.attach(attach)
+    try:
+        server.sendmail(email_str, toaddr, msg.as_string())
+        print("РЎРѕРѕР±С‰РµРЅРёРµ СѓСЃРїРµС€РЅРѕ РѕС‚РїСЂР°РІР»РµРЅРѕ")
+    except (SMTPDataError):
+        print("РЎРѕРѕР±С‰РµРЅРёРµ РЅРµ РґРѕСЃС‚Р°РІР»РµРЅРѕ, РїСЂРѕРІРµСЂСЊС‚Рµ СЂР°Р±РѕС‚РѕСЃРїРѕСЃРѕР±РЅРѕСЃС‚СЊ РёСЃС…РѕРґСЏС‰РµРіРѕ Р°РґСЂРµСЃР°.")
     server.quit()
 
+def end_delete():
+    if files_to_send != []:
+        for file_n in files_to_send:
+            try:
+                os.remove(file_n)
+            except: return ""
 
 def check_theme(theme_name, themes):
     for theme in themes:
@@ -518,13 +547,16 @@ def similar(a, b):
 
 def compare_docs(doc1, doc2, path1 , path2):
     path = str(ROOT_DIR) + r"\downloads\\"
-    word = win32com.client.Dispatch("Word.application")
-    word.CompareDocuments(word.Documents.Open(path1 + str(doc1)), word.Documents.Open(path2 + str(doc2)))
-    doc1 = str(doc1).replace(".docx", '')
-    doc2 = str(doc2).replace(".docx", '')
-    word.ActiveDocument.ActiveWindow.View.Type = 3
-    file_name = path + doc1 + "_Comparison.docx"
-    word.ActiveDocument.SaveAs(FileName=file_name, FileFormat = 16)
+    word = win32com.client.gencache.EnsureDispatch("Word.Application")
+    path1 = path1.replace(str(doc1), '') + r"\\"
+    path2 = path2.replace(str(doc2), '') + r"\\"
+    word.CompareDocuments(word.Documents.Open(path1 + str(doc1)),
+                                 word.Documents.Open(path2 + str(doc2)))
+    name = str(doc1).replace('.docx', '') + "_Comparison.docx"
+    word.ActiveDocument.SaveAs(FileName=path + name)
+    word.Quit()
+    file_name = path + name
+    file_name = file_name.replace(r'\\\\', r'\\')
     files_to_send.append(file_name)
     word.Quit()
     return file_name
@@ -537,42 +569,62 @@ def init_delete():
 
 def newparser():
     init_delete()
-    html = web('https://smev3.gosuslugi.ru/portal')
-    smev3_news = get_content(html)
-    del html
-    time.sleep(0.1)
-    html_1 = web('https://smev3.gosuslugi.ru/portal/news.jsp')
-    print("На данный момент доступны следующие фильтры для сайта https://smev3.gosuslugi.ru/portal/news.jsp: ")
-    themes = get_themes(html_1)
-    for theme in themes:
-        print('-- ' + str(theme))
-    answer = input("Желаете ли Вы воспользоваться фильтром? (Да/Нет): ")
-    if answer == 'Да':
-        html_1.filter = True
-        html_1.filter_word = input("Скопируйте тему фильтрации из списка выше сюда: ")
-        while check_theme(html_1.filter_word, themes) == False:
-            print("Тема фильтрации не соответсвует списку")
-            html_1.filter_word = input("Скопируйте тему фильтрации из списка выше сюда: ")
-    else:
-        html_1.filter = False
-    print("Производится отбор новостей по заданным параметрам...")
-    next_smev3_news = get_content(html_1)
-    del html_1
-    print("Новости отобраны.")
-    html_2 = web('https://dom.gosuslugi.ru/#!/regulations')
-    get_content(html_2)
-    del html_2
-    html_3 = web('https://fssp.gov.ru/mvv_fssp/')
-    get_content(html_3)
-    del html_3
-    html_4 = web('https://pfr.gov.ru/info/af/')
-    get_content(html_4)
-    del html_4
+    config = configparser.ConfigParser()
+    try:
+        if os.stat(str(ROOT_DIR) + r"\\config.ini").st_size == 0:
+            shutil.copy(str(ROOT_DIR) + r"\\config_reserve.ini", str(ROOT_DIR) + r"\\config.ini")
+        config.read(str(ROOT_DIR) + r"\\config.ini", 'UTF-8')
+        my_list = ast.literal_eval(config.get("links", "link"))
+        dest_mails = ast.literal_eval(config.get("e_mail", "destination_addr"))
+        mail_subject = config["e_mail"]["msg_subject"]
+        send_addr = config["e_mail"]["send_addr"]
+        send_password = config["e_mail"]["send_password"]
+    except:
+        my_list = []
+        dest_mails = []
+        mail_subject = ""
+        send_addr = ''
+        send_password = ''
+    for link in my_list:
+        smev3_news = []
+        send_news = False
+        if link == 'https://smev3.gosuslugi.ru/portal/news.jsp' or link == 'https://smev3.gosuslugi.ru/portal':
+            send_news = True
+        html = web(link)
+        if link == 'https://smev3.gosuslugi.ru/portal/news.jsp':
+            themes = get_themes(html)
+            to_cfg = '' 
+            for th in themes:
+                to_cfg += (th + ', ')
+            config.set('filter', 'themes', to_cfg)
+            with codecs.open('config.ini', 'w', 'UTF-8') as configfile:
+                config.write(configfile)
+            if config["filter"]["filter_on"] == '"Yes"':
+                print("РќР° РґР°РЅРЅС‹Р№ РјРѕРјРµРЅС‚ РґРѕСЃС‚СѓРїРЅС‹ СЃР»РµРґСѓСЋС‰РёРµ С„РёР»СЊС‚СЂС‹ РґР»СЏ СЃР°Р№С‚Р° https://smev3.gosuslugi.ru/portal/news.jsp: ")
+                for theme in themes:
+                    print('-- ' + str(theme))
+                html.filter = True
+                html.filter_word = config["filter"]["theme"]
+                if check_theme(html.filter_word, themes) == False:
+                    print("РўРµРјР° С„РёР»СЊС‚СЂР°С†РёРё РЅРµ РѕР±РЅР°СЂСѓР¶РµРЅР°, РѕС‚Р±РѕСЂ РЅРѕРІРѕСЃС‚РµР№ РѕСЃСѓС‰РµСЃС‚РІРёС‚СЊ РЅРµ СѓРґР°Р»РѕСЃСЊ")
+                    del html
+                    continue
+        else:
+            html.filter = False
+        smev3_news += get_content(html)
+        if send_news is True:
+            if smev3_news != []:
+                for mail in dest_mails:
+                    send_email(smev3_news, mail, mail_subject, "news", send_addr, send_password)
+            else:
+                print("РќР° СЃС‚СЂР°РЅРёС†Рµ ", link, " РЅРѕРІС‹С… РЅРѕРІРѕСЃС‚РµР№ РЅРµ РѕР±РЅР°СЂСѓР¶РµРЅРѕ.")
+        del html
+        time.sleep(0.1)
     comparing()
-    dest_mail = input("Введите почту получателя: ")
-    dest_mail = str(dest_mail)
-    print("Производится отправка сообщения...")
-    send_email(make_html_text(info_comp) + smev3_news + next_smev3_news, dest_mail)
-    input("Нажмите Enter для выхода")
-
+    if info_comp != []:
+        for mail in dest_mails:
+            send_email(make_html_text(info_comp), mail, mail_subject, "comparing", send_addr, send_password)
+    else:
+        print("РќРѕРІС‹С… РІРµСЂСЃРёР№ С„Р°Р№Р»РѕРІ РЅРµ РѕР±РЅР°СЂСѓР¶РµРЅРѕ.")
+    end_delete()
 newparser()
