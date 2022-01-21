@@ -1,0 +1,1669 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:fssp="http://www.fssprus.ru/namespace/bankanswer/2019/1" targetNamespace="http://www.fssprus.ru/namespace/bankanswer/2019/1" elementFormDefault="qualified" attributeFormDefault="unqualified">
+ <xs:simpleType name="DAccountType">
+  <xs:annotation>
+   <xs:documentation>РЅРѕРјРµСЂ СЃС‡РµС‚Р° РІ РєСЂРµРґРёС‚РЅРѕР№ РѕСЂРіР°РЅРёР·Р°С†РёРё</xs:documentation>
+  </xs:annotation>
+  <xs:restriction base="xs:string">
+   <xs:maxLength value="34"/>
+  </xs:restriction>
+ </xs:simpleType>
+ <xs:simpleType name="DAccountKindCodeType">
+  <xs:annotation>
+   <xs:documentation>РєРѕРґ РІРёРґР° Р±Р°РЅРєРѕРІСЃРєРѕРіРѕ СЃС‡С‘С‚Р°</xs:documentation>
+  </xs:annotation>
+  <xs:restriction base="xs:string">
+   <xs:length value="2"/>
+   <xs:enumeration value="01">
+    <xs:annotation>
+     <xs:documentation>СЂР°СЃС‡РµС‚РЅС‹Р№ СЃС‡РµС‚ РѕС‚РєСЂС‹РІР°РµРјС‹Р№ СЋСЂ.Р»РёС†Р°Рј, РРџ, С„РёР·.Р»РёС†Р°Рј, РѕСЃСѓС‰РµСЃС‚РІР»СЏСЋС‰РёРј РїСЂРµРґРїСЂРёРЅРёРјР°С‚РµР»СЊСЃРєСѓСЋ РґРµСЏС‚РµР»СЊРЅРѕСЃС‚СЊ</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+   <xs:enumeration value="02">
+    <xs:annotation>
+     <xs:documentation>С‚РµРєСѓС‰РёР№ СЃС‡РµС‚-СЃС‡РµС‚ РѕС‚РєСЂС‹РІР°РµРјС‹Р№ СЋСЂ.Р»РёС†Р°Рј, С„РёР·.Р»РёС†Р°Рј</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+   <xs:enumeration value="03">
+    <xs:annotation>
+     <xs:documentation>РґРµРїРѕР·РёС‚РЅС‹Р№ СЃС‡РµС‚ РїРѕ СѓС‡РµС‚Сѓ РїСЂРёРІР»РµС‡РµРЅРЅС‹С… РІ РґРµРїРѕР·РёС‚ СЃСЂРµРґСЃС‚РІ, РІРєР»Р°РґС‹ С„РёР·.Р»РёС† Рё СЋСЂ.Р»РёС†</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+   <xs:enumeration value="04">
+    <xs:annotation>
+     <xs:documentation>РґРµРїРѕР·РёС‚РЅС‹Р№ СЃС‡РµС‚ СЃСѓРґРѕРІ, РїРѕРґСЂР°Р·РґРµР»РµРЅРёР№ СЃР»СѓР¶Р±С‹ СЃСѓРґРµР±РЅС‹С… РїСЂРёСЃС‚Р°РІРѕРІ, РїСЂР°РІРѕРѕС…СЂР°РЅРёС‚РµР»СЊРЅС‹С… РѕСЂРіР°РЅРѕРІ, РЅРѕС‚Р°СЂРёСѓСЃРѕРІ</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+   <xs:enumeration value="05">
+    <xs:annotation>
+     <xs:documentation>РєСЂРµРґРёС‚РЅС‹Р№ СЃС‡РµС‚ РїРѕ РєСЂРµРґРёС‚Р°Рј С„РёР·.Р»РёС†Р° Рё СЋСЂ.Р»РёС†Р°Рј</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+   <xs:enumeration value="06">
+    <xs:annotation>
+     <xs:documentation>РІР°Р»СЋС‚РЅС‹Р№ СЃС‡РµС‚ РѕС‚РєСЂС‹РІР°РµРјС‹Р№ РґР»СЏ СЃРѕРІРµСЂС€РµРЅРёСЏ РІР°Р»СЋС‚РЅС‹С… РѕРїРµСЂР°С†РёР№</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+   <xs:enumeration value="08">
+    <xs:annotation>
+     <xs:documentation>РєР°СЂС‚РѕС‡РЅС‹Р№ СЃС‡РµС‚ РѕС‚РєСЂС‹РІР°РµРјС‹Р№ РґР»СЏ РєР°СЂС‚РѕС‡РЅС‹С… РїСЂРѕРµРєС‚РѕРІ</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+   <xs:enumeration value="09">
+    <xs:annotation>
+     <xs:documentation>Р±СЋРґР¶РµС‚РЅС‹Р№ СЃС‡РµС‚ РѕС‚РєСЂС‹РІР°РµРјС‹Р№ Р»РёС†Р°Рј, РѕСЃСѓС‰РµСЃС‚РІР»СЏСЋС‰РёРј РѕРїРµСЂР°С†РёРё СЃРѕ СЃСЂРµРґСЃС‚РІР°РјРё Р±СЋРґР¶РµС‚РѕРІ РІСЃРµС… СѓСЂРѕРІРЅРµР№ Рё РіРѕСЃСѓРґР°СЂСЃС‚РІРµРЅРЅС‹С… РІРЅРµР±СЋРґР¶РµС‚РЅС‹С… С„РѕРЅРґРѕРІ</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+   <xs:enumeration value="10">
+    <xs:annotation>
+     <xs:documentation>РєРѕСЂСЂРµСЃРїРѕРЅРґРµРЅС‚СЃРєРёР№ СЃС‡РµС‚ РѕС‚РєСЂС‹РІР°РµРјС‹Р№ РєСЂРµРґРёС‚РЅС‹Рј РѕСЂРіР°РЅРёР·Р°С†РёСЏРј</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+   <xs:enumeration value="11">
+    <xs:annotation>
+     <xs:documentation>РєРѕСЂСЂРµСЃРїРѕРЅРґРµРЅС‚СЃРєРёР№ СЃСѓР±СЃС‡РµС‚ РѕС‚РєСЂС‹РІР°РµРјС‹Р№ С„РёР»РёР°Р»Р°Рј РєСЂРµРґРёС‚РЅС‹С… РѕСЂРіР°РЅРёР·Р°С†РёР№</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+   <xs:enumeration value="12">
+    <xs:annotation>
+     <xs:documentation>СЃС‡РµС‚ РґРѕРІРµСЂРёС‚РµР»СЊРЅРѕРіРѕ СѓРїСЂР°РІР»РµРЅРёСЏ РѕС‚РєСЂС‹РІР°РµРјС‹Р№ РґРѕРІРµСЂРёС‚РµР»СЊРЅРѕРјСѓ СѓРїСЂР°РІР»СЏСЋС‰РµРјСѓ</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+   <xs:enumeration value="13">
+    <xs:annotation>
+     <xs:documentation>СЃРїРµС†РёР°Р»СЊРЅС‹Р№ Р±Р°РЅРєРѕРІСЃРєРёР№ СЃС‡РµС‚ РѕС‚РєСЂС‹РІР°РµРјС‹Р№ СЋСЂ.Р»РёС†Р°Рј, С„РёР·.Р»РёС†Р°Рј РІ СЂР°РјРєР°С… РѕРїРµСЂР°С†РёР№ СЃ С†РµРЅРЅС‹РјРё Р±СѓРјР°РіР°РјРё</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+   <xs:enumeration value="14">
+    <xs:annotation>
+     <xs:documentation>СЃРѕРІРјРµСЃС‚РЅС‹Р№ СЃС‡РµС‚ РѕС‚РєСЂС‹РІР°РµРјС‹Р№ РЅРµСЃРєРѕР»СЊРєРёРјРё Р»РёС†Р°Рј</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+   <xs:enumeration value="15">
+    <xs:annotation>
+     <xs:documentation>РЅРѕРјРёРЅР°Р»СЊРЅС‹Р№ СЃС‡РµС‚ РѕС‚РєСЂС‹РІР°РµРјС‹Р№ Р»РёС†Сѓ, РѕСЃСѓС‰РµСЃС‚РІР»СЏСЋС‰РµРјСѓ РѕРїРµСЂР°С†РёРё СЃРѕ СЃСЂРµРґСЃС‚РІР°РјРё, РїСЂРёРЅР°РґР»РµР¶Р°С‰РёРјРё РґСЂСѓРіРѕРјСѓ Р»РёС†Сѓ</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+   <xs:enumeration value="16">
+    <xs:annotation>
+     <xs:documentation>РЅР°РєРѕРїРёС‚РµР»СЊРЅС‹Р№ СЃС‡РµС‚ СЃРѕР·РґР°РІР°РµРјРѕРіРѕ СЋСЂ.Р»РёС†Р°</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+   <xs:enumeration value="17">
+    <xs:annotation>
+     <xs:documentation>СЃРїРµС†РёР°Р»СЊРЅС‹Р№ Р±Р°РЅРєРѕРІСЃРєРёР№ СЃС‡РµС‚ РґР»СЏ СЂР°Р·РјРµС‰РµРЅРёСЏ СЃСЂРµРґСЃС‚РІ РєРѕРјРїРµРЅСЃР°С†РёРѕРЅРЅРѕРіРѕ С„РѕРЅРґР° РІРѕР·РјРµС‰РµРЅРёСЏ РІСЂРµРґР°, СЃСЂРµРґСЃС‚РІ РєРѕРјРїРµРЅСЃР°С†РёРѕРЅРЅРѕРіРѕ С„РѕРЅРґР° РѕР±РµСЃРїРµС‡РµРЅРёСЏ РґРѕРіРѕРІРѕСЂРЅС‹С… РѕР±СЏР·Р°С‚РµР»СЊСЃС‚РІ</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+  </xs:restriction>
+ </xs:simpleType>
+ <xs:simpleType name="DAccountTransactionType">
+  <xs:annotation>
+   <xs:documentation>С‚РёРї РѕРїРµСЂР°С†РёРё РїРѕ СЃС‡РµС‚Сѓ</xs:documentation>
+  </xs:annotation>
+  <xs:restriction base="xs:string">
+   <xs:length value="1"/>
+   <xs:enumeration value="1">
+    <xs:annotation>
+     <xs:documentation>РџСЂРёС…РѕРґ</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+   <xs:enumeration value="2">
+    <xs:annotation>
+     <xs:documentation>Р Р°СЃС…РѕРґ</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+   <xs:enumeration value="3">
+    <xs:annotation>
+     <xs:documentation>РћСЃС‚Р°С‚РѕРє РЅР° РЅР°С‡Р°Р»Рѕ</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+   <xs:enumeration value="4">
+    <xs:annotation>
+     <xs:documentation>РћСЃС‚Р°С‚РѕРє РЅР° РєРѕРЅРµС†</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+  </xs:restriction>
+ </xs:simpleType>
+ <xs:simpleType name="DAddrType">
+  <xs:annotation>
+   <xs:documentation>РїРѕС‡С‚РѕРІС‹Р№ Р°РґСЂРµСЃ. РЈРєР°Р·С‹РІР°РµС‚СЃСЏ РІ С„РѕСЂРјР°С‚Рµ - РєРѕРґ СЃС‚СЂР°РЅС‹ РїРѕ РћР±С‰РµСЂРѕСЃСЃРёР№СЃРєРѕРјСѓ РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂСѓ СЃС‚СЂР°РЅ РјРёСЂР°, РїРѕС‡С‚РѕРІС‹Р№ РёРЅРґРµРєСЃ, СЂРµРіРёРѕРЅ, СЂР°Р№РѕРЅ, РіРѕСЂРѕРґ, РЅР°СЃРµР»РµРЅРЅС‹Р№ РїСѓРЅРєС‚, СѓР»РёС†Р°, РґРѕРј, РєРѕСЂРїСѓСЃ, СЃС‚СЂРѕРµРЅРёРµ Рё (РёР»Рё) РІР»Р°РґРµРЅРёРµ, РєРІР°СЂС‚РёСЂР° РёР»Рё (РІ СЃР»СѓС‡Р°Рµ РѕС‚СЃСѓС‚СЃС‚РІРёСЏ РєРѕРґР° СЃС‚СЂР°РЅС‹ РїРѕ РћР±С‰РµСЂРѕСЃСЃРёР№СЃРєРѕРјСѓ РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂСѓ СЃС‚СЂР°РЅ РјРёСЂР°) РІ РїСЂРѕРёР·РІРѕР»СЊРЅРѕРј С„РѕСЂРјР°С‚Рµ</xs:documentation>
+  </xs:annotation>
+  <xs:restriction base="xs:string">
+   <xs:maxLength value="200"/>
+  </xs:restriction>
+ </xs:simpleType>
+ <xs:simpleType name="DBikType">
+  <xs:annotation>
+   <xs:documentation>Р±Р°РЅРєРѕРІСЃРєРёР№ РёРґРµРЅС‚РёС„РёРєР°С†РёРѕРЅРЅС‹Р№ РєРѕРґ; РѕРіСЂР°РЅРёС‡РµРЅРёРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ РЅР°: Р‘РРљ РґР»РёРЅР° 9 Р·РЅР°РєРѕРІ, SWIFT BIC РґР»РёРЅР° 8 РёР»Рё 11 Р·РЅР°РєРѕРІ</xs:documentation>
+  </xs:annotation>
+  <xs:restriction base="xs:string">
+   <xs:pattern value="\d{8}|\d{9}|\d{11}"/>
+  </xs:restriction>
+ </xs:simpleType>
+ <xs:simpleType name="DClearCode">
+  <xs:annotation>
+   <xs:documentation>РЅР°С†РёРѕРЅР°Р»СЊРЅС‹Р№ РєР»РёСЂРёРЅРіРѕРІС‹Р№ РєРѕРґ вЂ“ РєРѕРґ РёРґРµРЅС‚РёС„РёРєР°С†РёРё Р±Р°РЅРєРѕРІ РІ РЅР°С†РёРѕРЅР°Р»СЊРЅС‹С… РєР»РёСЂРёРЅРіРѕРІС‹С… СЃРёСЃС‚РµРјР°С… СЂР°Р·Р»РёС‡РЅС‹С… СЃС‚СЂР°РЅ</xs:documentation>
+  </xs:annotation>
+  <xs:restriction base="xs:string">
+   <xs:maxLength value="34"/>
+  </xs:restriction>
+ </xs:simpleType>
+ <xs:simpleType name="DCaptionType">
+  <xs:annotation>
+   <xs:documentation>СЃС‚СЂРѕРєР° РґР»РёРЅРѕР№ РЅРµ Р±РѕР»РµРµ 80 СЃРёРјРІРѕР»РѕРІ</xs:documentation>
+  </xs:annotation>
+  <xs:restriction base="xs:string">
+   <xs:maxLength value="80"/>
+  </xs:restriction>
+ </xs:simpleType>
+ <xs:simpleType name="DDatetimeType">
+  <xs:annotation>
+   <xs:documentation>РґР°С‚Р° Рё РІСЂРµРјСЏ</xs:documentation>
+  </xs:annotation>
+  <xs:restriction base="xs:dateTime">
+   <xs:minInclusive value="1900-01-01T00:00:00"/>
+   <xs:maxInclusive value="2100-01-01T00:00:00"/>
+  </xs:restriction>
+ </xs:simpleType>
+ <xs:simpleType name="DDateType">
+  <xs:annotation>
+   <xs:documentation>РґР°С‚Р°</xs:documentation>
+  </xs:annotation>
+  <xs:restriction base="xs:date">
+   <xs:minInclusive value="1900-01-01"/>
+   <xs:maxInclusive value="2100-01-01"/>
+  </xs:restriction>
+ </xs:simpleType>
+ <xs:simpleType name="DDbtrType">
+  <xs:annotation>
+   <xs:documentation>С‚РёРї  Р»РёС†Р°, РІ РѕС‚РЅРѕС€РµРЅРёРё РєРѕС‚РѕСЂРѕРіРѕ Р·Р°РїСЂР°С€РёРІР°СЋС‚СЃСЏ СЃРІРµРґРµРЅРёСЏ</xs:documentation>
+  </xs:annotation>
+  <xs:restriction base="xs:string">
+   <xs:maxLength value="10"/>
+   <xs:enumeration value="1">
+    <xs:annotation>
+     <xs:documentation>СЋСЂРёРґРёС‡РµСЃРєРѕРµ Р»РёС†Рѕ</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+   <xs:enumeration value="2">
+    <xs:annotation>
+     <xs:documentation>С„РёР·РёС‡РµСЃРєРѕРµ Р»РёС†Рѕ</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+  </xs:restriction>
+ </xs:simpleType>
+ <xs:simpleType name="DDeloTypeType">
+  <xs:annotation>
+   <xs:documentation>РІРёРґ РґРµР»Р°</xs:documentation>
+  </xs:annotation>
+  <xs:restriction base="xs:string">
+   <xs:maxLength value="10"/>
+   <xs:enumeration value="РРџ">
+    <xs:annotation>
+     <xs:documentation>РСЃРїРѕР»РЅРёС‚РµР»СЊРЅРѕРµ РїСЂРѕРёР·РІРѕРґСЃС‚РІРѕ</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+   <xs:enumeration value="РЎР”">
+    <xs:annotation>
+     <xs:documentation>РЎРІРѕРґРЅРѕРµ РёСЃРїРѕР»РЅРёС‚РµР»СЊРЅРѕРµ РїСЂРѕРёР·РІРѕРґСЃС‚РІРѕ</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+  </xs:restriction>
+ </xs:simpleType>
+ <xs:simpleType name="DDescriptionType">
+  <xs:annotation>
+   <xs:documentation>СЃС‚СЂРѕРєР° РґР»РёРЅРѕР№ РЅРµ Р±РѕР»РµРµ 1000 СЃРёРјРІРѕР»РѕРІ</xs:documentation>
+  </xs:annotation>
+  <xs:restriction base="xs:string">
+   <xs:maxLength value="1000"/>
+  </xs:restriction>
+ </xs:simpleType>
+ <xs:simpleType name="DDocnumberType">
+  <xs:annotation>
+   <xs:documentation>РЅРѕРјРµСЂ РґРѕРєСѓРјРµРЅС‚Р°</xs:documentation>
+  </xs:annotation>
+  <xs:restriction base="xs:string">
+   <xs:maxLength value="25"/>
+  </xs:restriction>
+ </xs:simpleType>
+ <xs:simpleType name="DEncumbranceOrgType">
+  <xs:annotation>
+   <xs:documentation>РѕСЂРіР°РЅРёР·Р°С†РёСЏ, РЅР°РєР»Р°РґС‹РІР°СЋС‰Р°СЏ РѕР±СЂРµРјРµРЅРµРЅРёСЏ</xs:documentation>
+  </xs:annotation>
+  <xs:restriction base="xs:string">
+   <xs:length value="1"/>
+   <xs:enumeration value="1">
+    <xs:annotation>
+     <xs:documentation>Р¤РќРЎ Р РѕСЃСЃРёРё</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+   <xs:enumeration value="2">
+    <xs:annotation>
+     <xs:documentation>Р¤РЎРЎРџ Р РѕСЃСЃРёРё</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+   <xs:enumeration value="3">
+    <xs:annotation>
+     <xs:documentation>Р¤РЎРЎ</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+   <xs:enumeration value="4">
+    <xs:annotation>
+     <xs:documentation>РџР¤Р </xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+   <xs:enumeration value="5">
+    <xs:annotation>
+     <xs:documentation>Р¤РўРЎ</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+   <xs:enumeration value="6">
+    <xs:annotation>
+     <xs:documentation>РЎСѓРґРµР±РЅС‹Р№ РѕСЂРіР°РЅ</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+   <xs:enumeration value="7">
+    <xs:annotation>
+     <xs:documentation>РРЅРѕР№ РѕСЂРіР°РЅ/РґРѕР»Р¶РЅРѕСЃС‚РЅРѕРµ Р»РёС†Рѕ</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+  </xs:restriction>
+ </xs:simpleType>
+ <xs:simpleType name="DEncumbrancePriorityType">
+  <xs:annotation>
+   <xs:documentation>РѕС‡РµСЂРµРґРЅРѕСЃС‚СЊ СЃРїРёСЃР°РЅРёСЏ РґРµРЅРµР¶РЅС‹С… СЃСЂРµРґСЃС‚РІ СЃРѕ СЃС‡РµС‚Р° РІ СЃРѕРѕС‚РІРµС‚СЃС‚РІРёРµ СЃРѕ СЃС‚. 855 Р“Рљ Р Р¤</xs:documentation>
+  </xs:annotation>
+  <xs:restriction base="xs:integer">
+   <xs:maxInclusive value="5"/>
+   <xs:minInclusive value="1"/>
+  </xs:restriction>
+ </xs:simpleType>
+ <xs:simpleType name="DExchangeType">
+  <xs:annotation>
+   <xs:documentation>РєСѓСЂСЃ РІР°Р»СЋС‚С‹</xs:documentation>
+  </xs:annotation>
+  <xs:restriction base="xs:decimal">
+   <xs:totalDigits value="15"/>
+   <xs:fractionDigits value="4"/>
+  </xs:restriction>
+ </xs:simpleType>
+ <xs:simpleType name="DExternalKeyType">
+  <xs:annotation>
+   <xs:documentation>РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РґРѕРєСѓРјРµРЅС‚Р° РІ СЃРёСЃС‚РµРјРµ, РІ РєРѕС‚РѕСЂРѕР№ РѕРЅ Р±С‹Р» СЃС„РѕСЂРјРёСЂРѕРІР°РЅ</xs:documentation>
+  </xs:annotation>
+  <xs:restriction base="xs:string">
+   <xs:maxLength value="60"/>
+  </xs:restriction>
+ </xs:simpleType>
+ <xs:simpleType name="DIdType">
+  <xs:annotation>
+   <xs:documentation>РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РґРѕРєСѓРјРµРЅС‚Р° РІ С„РµРґРµСЂР°Р»СЊРЅРѕР№ РіРѕСЃСѓРґР°СЂСЃС‚РІРµРЅРЅРѕР№ РёРЅС„РѕСЂРјР°С†РёРѕРЅРЅРѕР№ СЃРёСЃС‚РµРјРµ В«РђРІС‚РѕРјР°С‚РёР·РёСЂРѕРІР°РЅРЅР°СЏ РёРЅС„РѕСЂРјР°С†РёРѕРЅРЅР°СЏ СЃРёСЃС‚РµРјР° Р¤РµРґРµСЂР°Р»СЊРЅРѕР№ СЃР»СѓР¶Р±С‹ СЃСѓРґРµР±РЅС‹С… РїСЂРёСЃС‚Р°РІРѕРІВ» (РґР°Р»РµРµ вЂ“ РђРРЎ Р¤РЎРЎРџ Р РѕСЃСЃРёРё)</xs:documentation>
+  </xs:annotation>
+  <xs:restriction base="xs:integer">
+   <xs:maxInclusive value="9223372036854775807"/>
+   <xs:minInclusive value="-9223372036854775808"/>
+  </xs:restriction>
+ </xs:simpleType>
+ <xs:simpleType name="DInnType">
+  <xs:annotation>
+   <xs:documentation>РёРґРµРЅС‚РёС„РёРєР°С†РёРѕРЅРЅС‹Р№ РЅРѕРјРµСЂ РЅР°Р»РѕРіРѕРїР»Р°С‚РµР»СЊС‰РёРєР° РґР»СЏ СЋСЂРёРґРёС‡РµСЃРєРѕРіРѕ Р»РёС†Р° - 10 С†РёС„СЂ,РґР»СЏ РёРЅРґРёРІРёРґСѓР°Р»СЊРЅРѕРіРѕ РїСЂРµРґРїСЂРёРЅРёРјР°С‚РµР»СЏ - 12 С†РёС„СЂ. Р”РѕРїСѓСЃС‚РёРјРѕ СѓРєР°Р·Р°РЅРёРµ РєРѕРґР° РёРЅРѕСЃС‚СЂР°РЅРЅРѕР№ РѕСЂРіР°РЅРёР·Р°С†РёРё РґР»СЏ СЋСЂРёРґРёС‡РµСЃРєРѕРіРѕ Р»РёС†Р° - РЅРµСЂРµР·РёРґРµРЅС‚Р° - 5 С†РёС„СЂ</xs:documentation>
+  </xs:annotation>
+  <xs:restriction base="xs:string">
+   <xs:pattern value="\d{5}|\d{10}|\d{12}"/>
+  </xs:restriction>
+ </xs:simpleType>
+ <xs:simpleType name="DKppType">
+  <xs:annotation>
+   <xs:documentation>РєРѕРґ РїСЂРёС‡РёРЅС‹ РїРѕСЃС‚Р°РЅРѕРІРєРё РЅР° СѓС‡РµС‚ (РґР°Р»РµРµ - РљРџРџ)</xs:documentation>
+  </xs:annotation>
+  <xs:restriction base="xs:string">
+   <xs:length value="9"/>
+  </xs:restriction>
+ </xs:simpleType>
+ <xs:simpleType name="DGenderType">
+  <xs:annotation>
+   <xs:documentation>РїРѕР»</xs:documentation>
+  </xs:annotation>
+  <xs:restriction base="xs:string">
+   <xs:length value="1"/>
+   <xs:enumeration value="1">
+    <xs:annotation>
+     <xs:documentation>РњСѓР¶СЃРєРѕР№</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+   <xs:enumeration value="2">
+    <xs:annotation>
+     <xs:documentation>Р–РµРЅСЃРєРёР№</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+  </xs:restriction>
+ </xs:simpleType>
+ <xs:simpleType name="DOKCMType">
+  <xs:annotation>
+   <xs:documentation>РєРѕРґ РїРѕ РћР±С‰РµСЂРѕСЃСЃРёР№СЃРєРѕРјСѓ РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂСѓ СЃС‚СЂР°РЅ РјРёСЂР° (3-СЂР°Р·СЂСЏРґРЅС‹Р№, С†РёС„СЂРѕРІРѕР№)</xs:documentation>
+  </xs:annotation>
+  <xs:restriction base="xs:string">
+   <xs:pattern value="\d{3}"/>
+  </xs:restriction>
+ </xs:simpleType>
+ <xs:simpleType name="DMoneyType">
+  <xs:annotation>
+   <xs:documentation>СЃСѓРјРјР°</xs:documentation>
+  </xs:annotation>
+  <xs:restriction base="xs:decimal">
+   <xs:totalDigits value="15"/>
+   <xs:fractionDigits value="2"/>
+  </xs:restriction>
+ </xs:simpleType>
+ <xs:simpleType name="DMortgageContagentType">
+  <xs:annotation>
+   <xs:documentation>С‚РёРї  Р»РёС†Р°, РІ РѕС‚РЅРѕС€РµРЅРёРё РєРѕС‚РѕСЂРѕРіРѕ Р·Р°РїСЂР°С€РёРІР°СЋС‚СЃСЏ СЃРІРµРґРµРЅРёСЏ РїРѕ Р·Р°Р»РѕРіСѓ</xs:documentation>
+  </xs:annotation>
+  <xs:restriction base="xs:string">
+   <xs:length value="1"/>
+   <xs:enumeration value="1">
+    <xs:annotation>
+     <xs:documentation>Р·Р°Р»РѕРіРѕРґР°С‚РµР»СЊ</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+   <xs:enumeration value="2">
+    <xs:annotation>
+     <xs:documentation>Р·Р°Р»РѕРіРѕРґРµСЂР¶Р°С‚РµР»СЊ</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+  </xs:restriction>
+ </xs:simpleType>
+ <xs:simpleType name="DObligationPropertyKindType">
+  <xs:annotation>
+   <xs:documentation>РІРёРґ РёРјСѓС‰РµСЃС‚РІР°</xs:documentation>
+  </xs:annotation>
+  <xs:restriction base="xs:string">
+   <xs:length value="1"/>
+   <xs:enumeration value="1">
+    <xs:annotation>
+     <xs:documentation>РќРµРґРІРёР¶РёРјРѕРµ РёРјСѓС‰РµСЃС‚РІРѕ</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+   <xs:enumeration value="2">
+    <xs:annotation>
+     <xs:documentation>Р”РІРёР¶РёРјРѕРµ РёРјСѓС‰РµСЃС‚РІРѕ</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+  </xs:restriction>
+ </xs:simpleType>
+ <xs:simpleType name="DObligationPropertyType">
+  <xs:annotation>
+   <xs:documentation>РІРёРґ РѕР±СЏР·Р°С‚РµР»СЊСЃС‚РІР°</xs:documentation>
+  </xs:annotation>
+  <xs:restriction base="xs:string">
+   <xs:length value="1"/>
+   <xs:enumeration value="1">
+    <xs:annotation>
+     <xs:documentation>РРїРѕС‚РµС‡РЅРѕРµ РєСЂРµРґРёС‚РѕРІР°РЅРёРµ</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+   <xs:enumeration value="2">
+    <xs:annotation>
+     <xs:documentation>РђРІС‚РѕРєСЂРµРґРёС‚</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+   <xs:enumeration value="3">
+    <xs:annotation>
+     <xs:documentation>РЈРІРµРґРѕРјР»РµРЅРёСЏ Рѕ Р·Р°Р»РѕРіРµ РґРІРёР¶РёРјРѕРіРѕ РёРјСѓС‰РµСЃС‚РІР°, Р·Р°СЂРµРіРёСЃС‚СЂРёСЂРѕРІР°РЅРЅРѕРµ РЅРѕС‚Р°СЂРёСѓСЃРѕРј</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+   <xs:enumeration value="4">
+    <xs:annotation>
+     <xs:documentation>РРЅРѕРµ</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+  </xs:restriction>
+ </xs:simpleType>
+ <xs:simpleType name="DOgrnType">
+  <xs:annotation>
+   <xs:documentation>РѕСЃРЅРѕРІРЅРѕР№ РіРѕСЃСѓРґР°СЂСЃС‚РІРµРЅРЅС‹Р№ СЂРµРіРёСЃС‚СЂР°С†РёРѕРЅРЅС‹Р№ РЅРѕРјРµСЂ (РґР°Р»РµРµ - РћР“Р Рќ)</xs:documentation>
+  </xs:annotation>
+  <xs:restriction base="xs:string">
+   <xs:maxLength value="15"/>
+  </xs:restriction>
+ </xs:simpleType>
+ <xs:simpleType name="DOkvType">
+  <xs:annotation>
+   <xs:documentation>С‚СЂРµС…Р·РЅР°С‡РЅС‹Р№ Р±СѓРєРІРµРЅРЅРѕ-С†РёС„СЂРѕРІРѕР№ РєРѕРґ (РґРѕРїСѓСЃРєР°РµС‚СЃСЏ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёРµ С†РёС„СЂ Рё Р»Р°С‚РёРЅСЃРєРёС… СЃРёРјРІРѕР»РѕРІ РІ РІРµСЂС…РЅРµРј СЂРµРіРёСЃС‚СЂРµ) РїРѕ РћР±С‰РµСЂРѕСЃСЃРёР№СЃРєРѕРјСѓ РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂСѓ РІР°Р»СЋС‚</xs:documentation>
+  </xs:annotation>
+  <xs:restriction base="xs:string">
+   <xs:length value="3"/>
+  </xs:restriction>
+ </xs:simpleType>
+ <xs:simpleType name="DPersonDocumentTypeType">
+  <xs:annotation>
+   <xs:documentation>С‚РёРїС‹ РґРѕРєСѓРјРµРЅС‚РѕРІ, СѓРґРѕСЃС‚РѕРІРµСЂСЏСЋС‰РёС… Р»РёС‡РЅРѕСЃС‚СЊ</xs:documentation>
+  </xs:annotation>
+  <xs:restriction base="xs:string">
+   <xs:length value="2"/>
+   <xs:enumeration value="01">
+    <xs:annotation>
+     <xs:documentation>РїР°СЃРїРѕСЂС‚ РіСЂР°Р¶РґР°РЅРёРЅР° РЎРѕСЋР·Р° РЎРѕРІРµС‚СЃРєРёС… РЎРѕС†РёР°Р»РёСЃС‚РёС‡РµСЃРєРёС… Р РµСЃРїСѓР±Р»РёРє</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+   <xs:enumeration value="02">
+    <xs:annotation>
+     <xs:documentation>Р·Р°РіСЂР°РЅРїР°СЃРїРѕСЂС‚ РіСЂР°Р¶РґР°РЅРёРЅР° РЎРѕСЋР·Р° РЎРѕРІРµС‚СЃРєРёС… РЎРѕС†РёР°Р»РёСЃС‚РёС‡РµСЃРєРёС… Р РµСЃРїСѓР±Р»РёРє</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+   <xs:enumeration value="03">
+    <xs:annotation>
+     <xs:documentation>СЃРІРёРґРµС‚РµР»СЊСЃС‚РІРѕ Рѕ СЂРѕР¶РґРµРЅРёРё</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+   <xs:enumeration value="04">
+    <xs:annotation>
+     <xs:documentation>СѓРґРѕСЃС‚РѕРІРµСЂРµРЅРёРµ Р»РёС‡РЅРѕСЃС‚Рё РѕС„РёС†РµСЂР°</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+   <xs:enumeration value="05">
+    <xs:annotation>
+     <xs:documentation>СЃРїСЂР°РІРєР° РѕР± РѕСЃРІРѕР±РѕР¶РґРµРЅРёРё РёР· РјРµСЃС‚Р° Р»РёС€РµРЅРёСЏ СЃРІРѕР±РѕРґС‹</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+   <xs:enumeration value="06">
+    <xs:annotation>
+     <xs:documentation>РїР°СЃРїРѕСЂС‚ РњРёРЅРјРѕСЂС„Р»РѕС‚Р°</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+   <xs:enumeration value="07">
+    <xs:annotation>
+     <xs:documentation>РІРѕРµРЅРЅС‹Р№ Р±РёР»РµС‚ СЃРѕР»РґР°С‚Р° (РјР°С‚СЂРѕСЃР°, СЃРµСЂР¶Р°РЅС‚Р°, СЃС‚Р°СЂС€РёРЅС‹)</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+   <xs:enumeration value="08">
+    <xs:annotation>
+     <xs:documentation>РІСЂРµРјРµРЅРЅРѕРµ СѓРґРѕСЃС‚РѕРІРµСЂРµРЅРёРµ, РІС‹РґР°РЅРЅРѕРµ РІР·Р°РјРµРЅ РІРѕРµРЅРЅРѕРіРѕ Р±РёР»РµС‚Р°</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+   <xs:enumeration value="09">
+    <xs:annotation>
+     <xs:documentation>РґРёРїР»РѕРјР°С‚РёС‡РµСЃРєРёР№ РїР°СЃРїРѕСЂС‚ РіСЂР°Р¶РґР°РЅРёРЅР° Р РѕСЃСЃРёР№СЃРєРѕР№ Р¤РµРґРµСЂР°С†РёРё</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+   <xs:enumeration value="10">
+    <xs:annotation>
+     <xs:documentation>РёРЅРѕСЃС‚СЂР°РЅРЅС‹Р№ РїР°СЃРїРѕСЂС‚</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+   <xs:enumeration value="11">
+    <xs:annotation>
+     <xs:documentation>СЃРІРёРґРµС‚РµР»СЊСЃС‚РІРѕ Рѕ СЂР°СЃСЃРјРѕС‚СЂРµРЅРёРё С…РѕРґР°С‚Р°Р№СЃС‚РІР° Рѕ РїСЂРёР·РЅР°РЅРёРё Р±РµР¶РµРЅС†РµРј РїРѕ СЃСѓС‰РµСЃС‚РІСѓ</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+   <xs:enumeration value="12">
+    <xs:annotation>
+     <xs:documentation>РІРёРґ РЅР° Р¶РёС‚РµР»СЊСЃС‚РІРѕ Р»РёС†Р° Р±РµР· РіСЂР°Р¶РґР°РЅСЃС‚РІР°</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+   <xs:enumeration value="13">
+    <xs:annotation>
+     <xs:documentation>СѓРґРѕСЃС‚РѕРІРµСЂРµРЅРёРµ Р±РµР¶РµРЅС†Р° РІ Р РѕСЃСЃРёР№СЃРєРѕР№ Р¤РµРґРµСЂР°С†РёРё</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+   <xs:enumeration value="14">
+    <xs:annotation>
+     <xs:documentation>РІСЂРµРјРµРЅРЅРѕРµ СѓРґРѕСЃС‚РѕРІРµСЂРµРЅРёРµ Р»РёС‡РЅРѕСЃС‚Рё РіСЂР°Р¶РґР°РЅРёРЅР° Р РѕСЃСЃРёР№СЃРєРѕР№ Р¤РµРґРµСЂР°С†РёРё</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+   <xs:enumeration value="19">
+    <xs:annotation>
+     <xs:documentation>СЂР°Р·СЂРµС€РµРЅРёРµ РЅР° РІСЂРµРјРµРЅРЅРѕРµ РїСЂРѕР¶РёРІР°РЅРёРµ РІ Р РѕСЃСЃРёР№СЃРєРѕР№ Р¤РµРґРµСЂР°С†РёРё</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+   <xs:enumeration value="20">
+    <xs:annotation>
+     <xs:documentation>СЃРІРёРґРµС‚РµР»СЊСЃС‚РІРѕ Рѕ РїСЂРµРґРѕСЃС‚Р°РІР»РµРЅРёРё РІСЂРµРјРµРЅРЅРѕРіРѕ СѓР±РµР¶РёС‰Р° РЅР° С‚РµСЂСЂРёС‚РѕСЂРёРё Р Р¤</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+   <xs:enumeration value="21">
+    <xs:annotation>
+     <xs:documentation>РїР°СЃРїРѕСЂС‚ РіСЂР°Р¶РґР°РЅРёРЅР° Р РѕСЃСЃРёР№СЃРєРѕР№ Р¤РµРґРµСЂР°С†РёРё</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+   <xs:enumeration value="22">
+    <xs:annotation>
+     <xs:documentation>Р·Р°РіСЂР°РЅРїР°СЃРїРѕСЂС‚ РіСЂР°Р¶РґР°РЅРёРЅР° Р РѕСЃСЃРёР№СЃРєРѕР№ Р¤РµРґРµСЂР°С†РёРё</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+   <xs:enumeration value="23">
+    <xs:annotation>
+     <xs:documentation>СЃРІРёРґРµС‚РµР»СЊСЃС‚РІРѕ Рѕ СЂРѕР¶РґРµРЅРёРё, РІС‹РґР°РЅРЅРѕРµ СѓРїРѕР»РЅРѕРјРѕС‡РµРЅРЅС‹Рј РѕСЂРіР°РЅРѕРј РёРЅРѕСЃС‚СЂР°РЅРЅРѕРіРѕ РіРѕСЃСѓРґР°СЂСЃС‚РІР°</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+   <xs:enumeration value="24">
+    <xs:annotation>
+     <xs:documentation>СѓРґРѕСЃС‚РѕРІРµСЂРµРЅРёРµ Р»РёС‡РЅРѕСЃС‚Рё РІРѕРµРЅРЅРѕСЃР»СѓР¶Р°С‰РµРіРѕ Р РѕСЃСЃРёР№СЃРєРѕР№ Р¤РµРґРµСЂР°С†РёРё</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+   <xs:enumeration value="26">
+    <xs:annotation>
+     <xs:documentation>РїР°СЃРїРѕСЂС‚ РјРѕСЂСЏРєР°</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+   <xs:enumeration value="27">
+    <xs:annotation>
+     <xs:documentation>РІРѕРµРЅРЅС‹Р№ Р±РёР»РµС‚ РѕС„РёС†РµСЂР° Р·Р°РїР°СЃР°</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+   <xs:enumeration value="61">
+    <xs:annotation>
+     <xs:documentation>СЃРІРёРґРµС‚РµР»СЊСЃС‚РІРѕ Рѕ СЃРјРµСЂС‚Рё</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+   <xs:enumeration value="91">
+    <xs:annotation>
+     <xs:documentation>РёРЅС‹Рµ РґРѕРєСѓРјРµРЅС‚С‹, РїСЂРµРґСѓСЃРјРѕС‚СЂРµРЅРЅС‹Рµ Р·Р°РєРѕРЅРѕРґР°С‚РµР»СЊСЃС‚РІРѕРј Р РѕСЃСЃРёР№СЃРєРѕР№ Р¤РµРґРµСЂР°С†РёРё</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+  </xs:restriction>
+ </xs:simpleType>
+ <xs:simpleType name="DPhoneType">
+  <xs:annotation>
+   <xs:documentation>РЅРѕРјРµСЂ С‚РµР»РµС„РѕРЅР°. РЎРѕРґРµСЂР¶РёС‚ С‚РѕР»СЊРєРѕ С†РёС„СЂС‹</xs:documentation>
+  </xs:annotation>
+  <xs:restriction base="xs:string">
+   <xs:maxLength value="16"/>
+  </xs:restriction>
+ </xs:simpleType>
+ <xs:simpleType name="DPostcodeType">
+  <xs:annotation>
+   <xs:documentation>РєРѕРґ РїРѕ СЂРµРµСЃС‚СЂСѓ РґРѕР»Р¶РЅРѕСЃС‚РµР№ С„РµРґРµСЂР°Р»СЊРЅРѕР№ РіРѕСЃСѓРґР°СЂСЃС‚РІРµРЅРЅРѕР№ РіСЂР°Р¶РґР°РЅСЃРєРѕР№ СЃР»СѓР¶Р±С‹, СѓС‚РІРµСЂР¶РґР°РµРјРѕРјСѓ РІ СЃРѕРѕС‚РІРµС‚СЃС‚РІРёРё СЃ РЈРєР°Р·РѕРј РџСЂРµР·РёРґРµРЅС‚Р° Р РѕСЃСЃРёР№СЃРєРѕР№ Р¤РµРґРµСЂР°С†РёРё РѕС‚ 31.12.2005 в„–В 1574 В«Рћ СЂРµРµСЃС‚СЂРµ РґРѕР»Р¶РЅРѕСЃС‚РµР№ Р¤РµРґРµСЂР°Р»СЊРЅРѕР№ РіРѕСЃСѓРґР°СЂСЃС‚РІРµРЅРЅРѕР№ РіСЂР°Р¶РґР°РЅСЃРєРѕР№ СЃР»СѓР¶Р±С‹В» (РґР°Р»РµРµ вЂ” Р Р”Р¤Р“Р“РЎ), РёР»Рё РћР±С‰РµСЂРѕСЃСЃРёР№СЃРєРѕРјСѓ РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂСѓ РїСЂРѕС„РµСЃСЃРёР№ СЂР°Р±РѕС‡РёС…, РґРѕР»Р¶РЅРѕСЃС‚РµР№ СЃР»СѓР¶Р°С‰РёС… Рё С‚Р°СЂРёС„РЅС‹С… СЂР°Р·СЂСЏРґРѕРІ (РґР°Р»РµРµ - РћРљРџР”РўР )</xs:documentation>
+  </xs:annotation>
+  <xs:restriction base="xs:string">
+   <xs:maxLength value="25"/>
+  </xs:restriction>
+ </xs:simpleType>
+ <xs:simpleType name="DQueryAnswerType">
+  <xs:annotation>
+   <xs:documentation>С‚РёРї РѕС‚РІРµС‚Р°</xs:documentation>
+  </xs:annotation>
+  <xs:restriction base="xs:string">
+   <xs:length value="2"/>
+   <xs:enumeration value="01">
+    <xs:annotation>
+     <xs:documentation>Р•СЃС‚СЊ СЃРІРµРґРµРЅРёСЏ</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+   <xs:enumeration value="02">
+    <xs:annotation>
+     <xs:documentation>РќРµС‚ СЃРІРµРґРµРЅРёР№</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+   <xs:enumeration value="07">
+    <xs:annotation>
+     <xs:documentation>РџСЂРµРІС‹С€РµРЅ Р»РёРјРёС‚ Р·Р°РїРёСЃРµР№ РІ РѕС‚РІРµС‚Рµ</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+  </xs:restriction>
+ </xs:simpleType>
+ <xs:simpleType name="DQueryDatumAnswerType">
+  <xs:annotation>
+   <xs:documentation>С‚РёРї РѕС‚РІРµС‚Р°</xs:documentation>
+  </xs:annotation>
+  <xs:restriction base="xs:string">
+   <xs:length value="2"/>
+   <xs:enumeration value="01">
+    <xs:annotation>
+     <xs:documentation>Р•СЃС‚СЊ СЃРІРµРґРµРЅРёСЏ</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+   <xs:enumeration value="02">
+    <xs:annotation>
+     <xs:documentation>РќРµС‚ СЃРІРµРґРµРЅРёР№</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+   <xs:enumeration value="06">
+    <xs:annotation>
+     <xs:documentation>РРќРќ РЅРµ СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓРµС‚ РћР“Р Рќ</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+   <xs:enumeration value="08">
+    <xs:annotation>
+     <xs:documentation>РќРµРѕР±С…РѕРґРёРјРѕ СѓС‚РѕС‡РЅРµРЅРёРµ РґР°РЅРЅС‹С… РїРѕ Р·Р°РїСЂР°С€РёРІР°РµРјРѕРјСѓ Р»РёС†Сѓ</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+   <xs:enumeration value="10">
+    <xs:annotation>
+     <xs:documentation>Р—Р°СЃС‚СЂР°С…РѕРІР°РЅРЅРѕРµ Р»РёС†Рѕ РѕС‚СЃСѓС‚СЃС‚РІСѓРµС‚ РІ Р±Р°Р·Рµ РґР°РЅРЅС‹С…</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+   <xs:enumeration value="11">
+    <xs:annotation>
+     <xs:documentation>Р—Р°СЃС‚СЂР°С…РѕРІР°РЅРЅРѕРµ Р»РёС†Рѕ РЅРµР»СЊР·СЏ РёРґРµРЅС‚РёС„РёС†РёСЂРѕРІР°С‚СЊ</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+   <xs:enumeration value="12">
+    <xs:annotation>
+     <xs:documentation>РќР° Р·Р°СЃС‚СЂР°С…РѕРІР°РЅРЅРѕРµ Р»РёС†Рѕ РѕС‚СЃСѓС‚СЃС‚РІСѓСЋС‚ СЃРІРµРґРµРЅРёСЏ РѕС‚ СЃС‚СЂР°С…РѕРІР°С‚РµР»СЏ</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+   <xs:enumeration value="13">
+    <xs:annotation>
+     <xs:documentation>РњРѕС‚РёРІРёСЂРѕРІР°РЅРЅС‹Р№ РѕС‚РєР°Р·</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+  </xs:restriction>
+ </xs:simpleType>
+ <xs:simpleType name="DReceiverAddrTypeType">
+  <xs:annotation>
+   <xs:documentation>С‚РёРї РёРЅС„РѕСЂРјР°С†РёРё РѕР± Р°РґСЂРµСЃРµ</xs:documentation>
+  </xs:annotation>
+  <xs:restriction base="xs:string">
+   <xs:maxLength value="10"/>
+   <xs:enumeration value="EMAIL">
+    <xs:annotation>
+     <xs:documentation>Р°РґСЂРµСЃ СЌР»РµРєС‚СЂРѕРЅРЅРѕР№ РїРѕС‡С‚С‹</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+   <xs:enumeration value="FSSPRUS.RU">
+    <xs:annotation>
+     <xs:documentation>РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ Р»РёС‡РЅРѕРіРѕ РєР°Р±РёРЅРµС‚Р° РЅР° РѕС„РёС†РёР°Р»СЊРЅРѕРј СЃР°Р№С‚Рµ Р¤РЎРЎРџ Р РѕСЃСЃРёРё</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+   <xs:enumeration value="Р’Р•Р‘-РЎР•Р Р’РРЎ">
+    <xs:annotation>
+     <xs:documentation>РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РєРѕСЂСЂРµСЃРїРѕРЅРґРµРЅС‚Р° РґР»СЏ РґРѕСЃС‚Р°РІРєРё РїРѕСЃСЂРµРґСЃС‚РІРѕРј СЌР»РµРєС‚СЂРѕРЅРЅРѕРіРѕ СЃРµСЂРІРёСЃР° Р¤РЎРЎРџ Р РѕСЃСЃРёРё</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+   <xs:enumeration value="Р“Р­РџРЎ">
+    <xs:annotation>
+     <xs:documentation>РїРѕС‡С‚РѕРІС‹Р№ Р°РґСЂРµСЃ РґР»СЏ РґРѕСЃС‚Р°РІРєРё РїРѕСЃСЂРµРґСЃС‚РІРѕРј РёРЅС„РѕСЂРјР°С†РёРѕРЅРЅРѕР№ СЃРёСЃС‚РµРјС‹ С„РµРґРµСЂР°Р»СЊРЅРѕРіРѕ РѕРїРµСЂР°С‚РѕСЂР° РїРѕС‡С‚РѕРІРѕР№ СЃРІСЏР·Рё</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+   <xs:enumeration value="Р•РџР“РЈ">
+    <xs:annotation>
+     <xs:documentation>СЃС‚СЂР°С…РѕРІРѕР№ РЅРѕРјРµСЂ РёРЅРґРёРІРёРґСѓР°Р»СЊРЅРѕРіРѕ Р»РёС†РµРІРѕРіРѕ СЃС‡РµС‚Р°  (РґР°Р»РµРµ - РЎРќРР›РЎ) РґР»СЏ РґРѕСЃС‚Р°РІРєРё РїРѕСЃСЂРµРґСЃС‚РІРѕРј Р•РґРёРЅРѕРіРѕ РїРѕСЂС‚Р°Р»Р° РіРѕСЃСѓРґР°СЂСЃС‚РІРµРЅРЅС‹С… Рё РјСѓРЅРёС†РёРїР°Р»СЊРЅС‹С… СѓСЃР»СѓРі</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+   <xs:enumeration value="РџРћР§РўРћР™">
+    <xs:annotation>
+     <xs:documentation> РїРѕС‡С‚РѕРІС‹Р№ Р°РґСЂРµСЃ РґР»СЏ РґРѕСЃС‚Р°РІРєРё РЅР° Р±СѓРјР°Р¶РЅРѕРј РЅРѕСЃРёС‚РµР»Рµ</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+   <xs:enumeration value="Р¤РЎРЎРџ">
+    <xs:annotation>
+     <xs:documentation>РєРѕРґ СЃС‚СЂСѓРєС‚СѓСЂРЅРѕРіРѕ РїРѕРґСЂР°Р·РґРµР»РµРЅРёСЏ С‚РµСЂСЂРёС‚РѕСЂРёР°Р»СЊРЅРѕРіРѕ РѕСЂРіР°РЅР° РёР»Рё С†РµРЅС‚СЂР°Р»СЊРЅРѕРіРѕ Р°РїРїР°СЂР°С‚Р° Р¤РЎРЎРџ Р РѕСЃСЃРёРё</xs:documentation>
+    </xs:annotation>
+   </xs:enumeration>
+  </xs:restriction>
+ </xs:simpleType>
+ <xs:simpleType name="DRegionType">
+  <xs:annotation>
+   <xs:documentation>РґРІСѓР·РЅР°С‡РЅС‹Р№ С†РёС„СЂРѕРІРѕР№ РєРѕРґ СЂРµРіРёРѕРЅР°</xs:documentation>
+  </xs:annotation>
+  <xs:restriction base="xs:string">
+   <xs:pattern value="\d{2}"/>
+  </xs:restriction>
+ </xs:simpleType>
+ <xs:simpleType name="DSnilsType">
+  <xs:annotation>
+   <xs:documentation>РЎРќРР›РЎ. РџРµСЂРµРґР°РµС‚СЃСЏ Р±РµР· СЂР°Р·РґРµР»РёС‚РµР»РµР№ Рё РїСЂРѕР±РµР»РѕРІ</xs:documentation>
+  </xs:annotation>
+  <xs:restriction base="xs:string">
+   <xs:maxLength value="11"/>
+  </xs:restriction>
+ </xs:simpleType>
+ <xs:simpleType name="DTextType">
+  <xs:annotation>
+   <xs:documentation>РјР°СЃСЃРёРІ РїСЂРѕРёР·РІРѕР»СЊРЅС‹С… РґР°РЅРЅС‹С… (С‚РµРєСЃС‚РѕРІС‹Р№)</xs:documentation>
+  </xs:annotation>
+  <xs:restriction base="xs:string"/>
+ </xs:simpleType>
+ <xs:simpleType name="DVarchar1Type">
+  <xs:annotation>
+   <xs:documentation>СЃС‚СЂРѕРєР° РґР»РёРЅРѕР№ 1 СЃРёРјРІРѕР»</xs:documentation>
+  </xs:annotation>
+  <xs:restriction base="xs:string">
+   <xs:length value="1"/>
+  </xs:restriction>
+ </xs:simpleType>
+ <xs:simpleType name="DVarchar7Type">
+  <xs:annotation>
+   <xs:documentation>СЃС‚СЂРѕРєР° РґР»РёРЅРѕР№ РѕС‚ 1 РґРѕ 7 СЃРёРјРІРѕР»РѕРІ</xs:documentation>
+  </xs:annotation>
+  <xs:restriction base="xs:string">
+   <xs:minLength value="1"/>
+   <xs:maxLength value="7"/>
+  </xs:restriction>
+ </xs:simpleType>
+ <xs:simpleType name="DVarchar10Type">
+  <xs:annotation>
+   <xs:documentation>СЃС‚СЂРѕРєР° РґР»РёРЅРѕР№ РѕС‚ 1 РґРѕ 10 СЃРёРјРІРѕР»РѕРІ</xs:documentation>
+  </xs:annotation>
+  <xs:restriction base="xs:string">
+   <xs:minLength value="1"/>
+   <xs:maxLength value="10"/>
+  </xs:restriction>
+ </xs:simpleType>
+ <xs:simpleType name="DVarchar20Type">
+  <xs:annotation>
+   <xs:documentation>СЃС‚СЂРѕРєР° РґР»РёРЅРѕР№ РѕС‚ 1 РґРѕ 20 СЃРёРјРІРѕР»РѕРІ</xs:documentation>
+  </xs:annotation>
+  <xs:restriction base="xs:string">
+   <xs:minLength value="1"/>
+   <xs:maxLength value="20"/>
+  </xs:restriction>
+ </xs:simpleType>
+ <xs:simpleType name="DVarchar25Type">
+  <xs:annotation>
+   <xs:documentation>СЃС‚СЂРѕРєР° РґР»РёРЅРѕР№ РѕС‚ 1 РґРѕ 25 СЃРёРјРІРѕР»РѕРІ</xs:documentation>
+  </xs:annotation>
+  <xs:restriction base="xs:string">
+   <xs:minLength value="1"/>
+   <xs:maxLength value="25"/>
+  </xs:restriction>
+ </xs:simpleType>
+ <xs:simpleType name="DVarchar31Type">
+  <xs:annotation>
+   <xs:documentation>СЃС‚СЂРѕРєР° РґР»РёРЅРѕР№ РѕС‚ 1 РґРѕ 31 СЃРёРјРІРѕР»Р°</xs:documentation>
+  </xs:annotation>
+  <xs:restriction base="xs:string">
+   <xs:minLength value="1"/>
+   <xs:maxLength value="31"/>
+  </xs:restriction>
+ </xs:simpleType>
+ <xs:simpleType name="DVarchar60Type">
+  <xs:annotation>
+   <xs:documentation>СЃС‚СЂРѕРєР° РґР»РёРЅРѕР№ РѕС‚ 1 РґРѕ 60 СЃРёРјРІРѕР»Р°</xs:documentation>
+  </xs:annotation>
+  <xs:restriction base="xs:string">
+   <xs:minLength value="1"/>
+   <xs:maxLength value="60"/>
+  </xs:restriction>
+ </xs:simpleType>
+ <xs:simpleType name="DVarchar300Type">
+  <xs:annotation>
+   <xs:documentation>СЃС‚СЂРѕРєР° РґР»РёРЅРѕР№ РѕС‚ 1 РґРѕ 300 СЃРёРјРІРѕР»Р°</xs:documentation>
+  </xs:annotation>
+  <xs:restriction base="xs:string">
+   <xs:minLength value="1"/>
+   <xs:maxLength value="300"/>
+  </xs:restriction>
+ </xs:simpleType>
+ <xs:simpleType name="DVarchar3000Type">
+  <xs:annotation>
+   <xs:documentation>СЃС‚СЂРѕРєР° РґР»РёРЅРѕР№ РѕС‚ 1 РґРѕ 3000 СЃРёРјРІРѕР»РѕРІ</xs:documentation>
+  </xs:annotation>
+  <xs:restriction base="xs:string">
+   <xs:minLength value="1"/>
+   <xs:maxLength value="3000"/>
+  </xs:restriction>
+ </xs:simpleType>
+ <xs:simpleType name="DVarchar4000Type">
+  <xs:annotation>
+   <xs:documentation>СЃС‚СЂРѕРєР° РґР»РёРЅРѕР№ РѕС‚ 1 РґРѕ 4000 СЃРёРјРІРѕР»РѕРІ</xs:documentation>
+  </xs:annotation>
+  <xs:restriction base="xs:string">
+   <xs:minLength value="1"/>
+   <xs:maxLength value="4000"/>
+  </xs:restriction>
+ </xs:simpleType>
+ <xs:simpleType name="DVkspType">
+  <xs:annotation>
+   <xs:documentation>РєРѕРґ СЃС‚СЂСѓРєС‚СѓСЂРЅРѕРіРѕ РїРѕРґСЂР°Р·РґРµР»РµРЅРёСЏ</xs:documentation>
+  </xs:annotation>
+  <xs:restriction base="xs:string">
+   <xs:length value="5"/>
+  </xs:restriction>
+ </xs:simpleType>
+ <xs:simpleType name="DZipCode">
+  <xs:annotation>
+   <xs:documentation>РїРѕС‡С‚РѕРІС‹Р№ РёРЅРґРµРєСЃ</xs:documentation>
+  </xs:annotation>
+  <xs:restriction base="xs:string">
+   <xs:pattern value="\d{6}"/>
+  </xs:restriction>
+ </xs:simpleType>
+ <xs:element name="Answer" type="fssp:AnswerType" substitutionGroup="fssp:Object"/>
+ <xs:complexType name="AnswerType">
+  <xs:annotation>
+   <xs:documentation>Р­Р»РµРєС‚СЂРѕРЅРЅС‹Р№ РѕС‚РІРµС‚</xs:documentation>
+  </xs:annotation>
+  <xs:complexContent>
+   <xs:extension base="fssp:ObjectType">
+    <xs:sequence>
+     <xs:element name="ExternalKey" type="fssp:DExternalKeyType" minOccurs="1">
+      <xs:annotation>
+       <xs:documentation>РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РѕС‚РІРµС‚Р°</xs:documentation>
+       <xs:documentation>СѓРЅРёРєР°Р»СЊРЅС‹Р№ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РѕС‚РІРµС‚Р°</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="QueryInternalKey" type="fssp:DIdType" minOccurs="1">
+      <xs:annotation>
+       <xs:documentation>РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ Р·Р°РїСЂРѕСЃР°</xs:documentation>
+       <xs:documentation>СѓРЅРёРєР°Р»СЊРЅС‹Р№ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ Р·Р°РїСЂРѕСЃР°, СЃС„РѕСЂРјРёСЂРѕРІР°РЅРЅС‹Р№ РІ РђРРЎ Р¤РЎРЎРџ Р РѕСЃСЃРёРё</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="DocDate" type="fssp:DDateType" minOccurs="1">
+      <xs:annotation>
+       <xs:documentation>РґР°С‚Р° РѕС‚РІРµС‚Р°</xs:documentation>
+       <xs:documentation>РґР°С‚Р° СЃРѕР·РґР°РЅРёСЏ СЌР»РµРєС‚СЂРѕРЅРЅРѕРіРѕ РѕС‚РІРµС‚Р°</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="AnswerType" type="fssp:DQueryAnswerType" minOccurs="1">
+      <xs:annotation>
+       <xs:documentation>С‚РёРї РѕС‚РІРµС‚Р°</xs:documentation>
+       <xs:documentation>С‚РёРї РѕС‚РІРµС‚Р° РЅР° Р·Р°РїСЂРѕСЃ РґРѕР»Р¶РЅРѕСЃС‚РЅРѕРіРѕ Р»РёС†Р° Р¤РЎРЎРџ Р РѕСЃСЃРёРё</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element ref="fssp:Sendlist" minOccurs="1" maxOccurs="unbounded">
+      <xs:annotation>
+       <xs:documentation>Р°РґСЂРµСЃР°С‚, РєРѕС‚РѕСЂРѕРјСѓ РЅР°РїСЂР°РІР»СЏРµС‚СЃСЏ СЌР»РµРєС‚СЂРѕРЅРЅС‹Р№ РѕС‚РІРµС‚</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element ref="fssp:RequestSubject" minOccurs="0" maxOccurs="unbounded">
+      <xs:annotation>
+       <xs:documentation>РёРЅС„РѕСЂРјР°С†РёСЏ Рѕ Р»РёС†Р°С…, РІ РѕС‚РЅРѕС€РµРЅРёРё РєРѕС‚РѕСЂС‹С… РЅР°РїСЂР°РІР»РµРЅ Р·Р°РїСЂРѕСЃ, РЅР° РєРѕС‚РѕСЂС‹Р№ РґР°РЅ РѕС‚РІРµС‚</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+    </xs:sequence>
+   </xs:extension>
+  </xs:complexContent>
+ </xs:complexType>
+ <xs:element name="Sendlist" type="fssp:SendlistType" substitutionGroup="fssp:Object"/>
+ <xs:complexType name="SendlistType">
+  <xs:annotation>
+   <xs:documentation>РРЅС„РѕСЂРјР°С†РёСЏ РѕР± Р°РґСЂРµСЃР°С‚Рµ</xs:documentation>
+  </xs:annotation>
+  <xs:complexContent>
+   <xs:extension base="fssp:ObjectType">
+    <xs:sequence>
+     <xs:element name="Receiver" type="fssp:DDescriptionType" minOccurs="1">
+      <xs:annotation>
+       <xs:documentation>РїРѕР»СѓС‡Р°С‚РµР»СЊ</xs:documentation>
+       <xs:documentation>Р¤.Р.Рћ. РёР»Рё РЅР°РёРјРµРЅРѕРІР°РЅРёРµ Р°РґСЂРµСЃР°С‚Р° РѕС‚РІРµС‚Р°</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="ReceiverAddrType" type="fssp:DReceiverAddrTypeType" minOccurs="0">
+      <xs:annotation>
+       <xs:documentation>С‚РёРї Р°РґСЂРµСЃР° РїРѕР»СѓС‡Р°С‚РµР»СЏ</xs:documentation>
+       <xs:documentation>С‚РёРї Р°РґСЂРµСЃР°</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="ReceiverAddr" type="fssp:DDescriptionType" minOccurs="1">
+      <xs:annotation>
+       <xs:documentation>Р°РґСЂРµСЃ РїРѕР»СѓС‡Р°С‚РµР»СЏ</xs:documentation>
+       <xs:documentation>Р°РґСЂРµСЃ</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+    </xs:sequence>
+   </xs:extension>
+  </xs:complexContent>
+ </xs:complexType>
+ <xs:element name="RequestSubject" type="fssp:RequestSubjectType" substitutionGroup="fssp:Object"/>
+ <xs:complexType name="RequestSubjectType">
+  <xs:annotation>
+   <xs:documentation>Р›РёС†Р°, РІ РѕС‚РЅРѕС€РµРЅРёРё РєРѕС‚РѕСЂС‹С… РЅР°РїСЂР°РІР»РµРЅ Р·Р°РїСЂРѕСЃ</xs:documentation>
+  </xs:annotation>
+  <xs:complexContent>
+   <xs:extension base="fssp:ObjectType">
+    <xs:sequence>
+     <xs:element name="DeloNum" type="fssp:DDocnumberType" minOccurs="1">
+      <xs:annotation>
+       <xs:documentation>РЅРѕРјРµСЂ РґРµР»Р°</xs:documentation>
+       <xs:documentation>РЅРѕРјРµСЂ РґРµР»Р°, РїРѕ РєРѕС‚РѕСЂРѕРјСѓ Р·Р°РїСЂР°С€РёРІР°СЋС‚СЃСЏ СЃРІРµРґРµРЅРёСЏ</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="DebtorType" type="fssp:DDbtrType" minOccurs="1">
+      <xs:annotation>
+       <xs:documentation>С‚РёРї Р»РёС†Р°</xs:documentation>
+       <xs:documentation>С‚РёРї Р»РёС†Р°, РІ РѕС‚РЅРѕС€РµРЅРёРё РєРѕС‚РѕСЂРѕРіРѕ Р·Р°РїСЂР°С€РёРІР°СЋС‚СЃСЏ СЃРІРµРґРµРЅРёСЏ</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="Name" type="fssp:DDescriptionType" minOccurs="1">
+      <xs:annotation>
+       <xs:documentation>Р¤.Р.Рћ РёР»Рё РЅР°РёРјРµРЅРѕРІР°РЅРёРµ РѕСЂРіР°РЅРёР·Р°С†РёРё</xs:documentation>
+       <xs:documentation>РЅР°РёРјРµРЅРѕРІР°РЅРёРµ РѕСЂРіР°РЅРёР·Р°С†РёРё РёР»Рё Р¤.Р.Рћ. Р»РёС†Р°, РІ РѕС‚РЅРѕС€РµРЅРёРё РєРѕС‚РѕСЂРѕРіРѕ Р·Р°РїСЂР°С€РёРІР°СЋС‚СЃСЏ СЃРІРµРґРµРЅРёСЏ</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="Adr" type="fssp:DAddrType" minOccurs="1">
+      <xs:annotation>
+       <xs:documentation>Р°РґСЂРµСЃ</xs:documentation>
+       <xs:documentation>Р°РґСЂРµСЃ РѕСЂРіР°РЅРёР·Р°С†РёРё РёР»Рё Р»РёС†Р°, РІ РѕС‚РЅРѕС€РµРЅРёРё РєРѕС‚РѕСЂРѕРіРѕ Р·Р°РїСЂР°С€РёРІР°СЋС‚СЃСЏ СЃРІРµРґРµРЅРёСЏ (РјРµСЃС‚Рѕ Р¶РёС‚РµР»СЊСЃС‚РІР° РёР»Рё РјРµСЃС‚Рѕ РїСЂРµР±С‹РІР°РЅРёСЏ)</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="Born" type="fssp:DDateType" minOccurs="0">
+      <xs:annotation>
+       <xs:documentation>РґР°С‚Р° СЂРѕР¶РґРµРЅРёСЏ</xs:documentation>
+       <xs:documentation>РґР°С‚Р° СЂРѕР¶РґРµРЅРёСЏ Р»РёС†Р°, РІ РѕС‚РЅРѕС€РµРЅРёРё РєРѕС‚РѕСЂРѕРіРѕ Р·Р°РїСЂР°С€РёРІР°СЋС‚СЃСЏ СЃРІРµРґРµРЅРёСЏ. Р РµРєРІРёР·РёС‚ Р·Р°РїРѕР»РЅСЏРµС‚СЃСЏ, РµСЃР»Рё Р·РЅР°С‡РµРЅРёРµ СЂРµРєРІРёР·РёС‚Р° В«С‚РёРї Р»РёС†Р° РёР»Рё РѕСЂРіР°РЅРёР·Р°С†РёРёВ» СЂР°РІРЅРѕ Р·РЅР°С‡РµРЅРёСЋ В«2В»</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="Bornadr" type="fssp:DAddrType" minOccurs="0">
+      <xs:annotation>
+       <xs:documentation>РјРµСЃС‚Рѕ СЂРѕР¶РґРµРЅРёСЏ</xs:documentation>
+       <xs:documentation>РјРµСЃС‚Рѕ СЂРѕР¶РґРµРЅРёСЏ Р»РёС†Р°, РІ РѕС‚РЅРѕС€РµРЅРёРё РєРѕС‚РѕСЂРѕРіРѕ Р·Р°РїСЂР°С€РёРІР°СЋС‚СЃСЏ СЃРІРµРґРµРЅРёСЏ. Р РµРєРІРёР·РёС‚ Р·Р°РїРѕР»РЅСЏРµС‚СЃСЏ, РµСЃР»Рё Р·РЅР°С‡РµРЅРёРµ СЂРµРєРІРёР·РёС‚Р° В«С‚РёРї Р»РёС†Р° РёР»Рё РѕСЂРіР°РЅРёР·Р°С†РёРёВ» СЂР°РІРЅРѕ Р·РЅР°С‡РµРЅРёСЋ В«2В» </xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="Inn" type="fssp:DInnType" minOccurs="0">
+      <xs:annotation>
+       <xs:documentation>РРќРќ</xs:documentation>
+       <xs:documentation>РРќРќ РѕСЂРіР°РЅРёР·Р°С†РёРё РёР»Рё Р»РёС†Р°, РІ РѕС‚РЅРѕС€РµРЅРёРё РєРѕС‚РѕСЂРѕРіРѕ Р·Р°РїСЂР°С€РёРІР°СЋС‚СЃСЏ СЃРІРµРґРµРЅРёСЏ. Р РµРєРІРёР·РёС‚ РѕР±СЏР·Р°С‚РµР»РµРЅ РґР»СЏ Р·Р°РїРѕР»РЅРµРЅРёСЏ, РµСЃР»Рё Р·РЅР°С‡РµРЅРёРµ СЂРµРєРІРёР·РёС‚Р° В«С‚РёРї Р»РёС†Р° РёР»Рё РѕСЂРіР°РЅРёР·Р°С†РёРёВ» СЂР°РІРЅРѕ Р·РЅР°С‡РµРЅРёСЋ В«1В»</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="Kpp" type="fssp:DKppType" minOccurs="0">
+      <xs:annotation>
+       <xs:documentation>РљРџРџ</xs:documentation>
+       <xs:documentation>РљРџРџ РѕСЂРіР°РЅРёР·Р°С†РёРё РёР»Рё Р»РёС†Р°, РІ РѕС‚РЅРѕС€РµРЅРёРё РєРѕС‚РѕСЂРѕРіРѕ Р·Р°РїСЂР°С€РёРІР°СЋС‚СЃСЏ СЃРІРµРґРµРЅРёСЏ. Р РµРєРІРёР·РёС‚ Р·Р°РїРѕР»РЅСЏРµС‚СЃСЏ, РµСЃР»Рё Р·РЅР°С‡РµРЅРёРµ СЂРµРєРІРёР·РёС‚Р° В«С‚РёРї Р»РёС†Р° РёР»Рё РѕСЂРіР°РЅРёР·Р°С†РёРёВ» СЂР°РІРЅРѕ Р·РЅР°С‡РµРЅРёСЋ В«1В»</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="Ogrn" type="fssp:DOgrnType" minOccurs="0">
+      <xs:annotation>
+       <xs:documentation>РћР“Р Рќ</xs:documentation>
+       <xs:documentation>РћР“Р Рќ РѕСЂРіР°РЅРёР·Р°С†РёРё РёР»Рё Р»РёС†Р°, РІ РѕС‚РЅРѕС€РµРЅРёРё РєРѕС‚РѕСЂРѕРіРѕ Р·Р°РїСЂР°С€РёРІР°СЋС‚СЃСЏ СЃРІРµРґРµРЅРёСЏ. Р РµРєРІРёР·РёС‚ Р·Р°РїРѕР»РЅСЏРµС‚СЃСЏ РїСЂРё РµРіРѕ РЅР°Р»РёС‡РёРё</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="SNILS" type="fssp:DSnilsType" minOccurs="0">
+      <xs:annotation>
+       <xs:documentation>РЎРќРР›РЎ</xs:documentation>
+       <xs:documentation>РЎРќРР›РЎ Р»РёС†Р°, РІ РѕС‚РЅРѕС€РµРЅРёРё РєРѕС‚РѕСЂРѕРіРѕ Р·Р°РїСЂР°С€РёРІР°СЋС‚СЃСЏ СЃРІРµРґРµРЅРёСЏ</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="TypeDocCode" type="fssp:DPersonDocumentTypeType" minOccurs="0">
+      <xs:annotation>
+       <xs:documentation>РєРѕРґ С‚РёРїР° РґРѕРєСѓРјРµРЅС‚Р°</xs:documentation>
+       <xs:documentation>РєРѕРґ РІРёРґР° РґРѕРєСѓРјРµРЅС‚Р°, СѓРґРѕСЃС‚РѕРІРµСЂСЏСЋС‰РµРіРѕ Р»РёС‡РЅРѕСЃС‚СЊ  С„РёР·РёС‡РµСЃРєРѕРіРѕ Р»РёС†Р°, РІ РѕС‚РЅРѕС€РµРЅРёРё РєРѕС‚РѕСЂРѕРіРѕ Р·Р°РїСЂР°С€РёРІР°СЋС‚СЃСЏ СЃРІРµРґРµРЅРёСЏ</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="SerDoc" type="fssp:DVarchar25Type" minOccurs="0">
+      <xs:annotation>
+       <xs:documentation>СЃРµСЂРёСЏ РґРѕРєСѓРјРµРЅС‚Р°</xs:documentation>
+       <xs:documentation>СЃРµСЂРёСЏ РґРѕРєСѓРјРµРЅС‚Р°, СѓРґРѕСЃС‚РѕРІРµСЂСЏСЋС‰РµРіРѕ Р»РёС‡РЅРѕСЃС‚СЊ С„РёР·РёС‡РµСЃРєРѕРіРѕ Р»РёС†Р°, РІ РѕС‚РЅРѕС€РµРЅРёРё РєРѕС‚РѕСЂРѕРіРѕ Р·Р°РїСЂР°С€РёРІР°СЋС‚СЃСЏ СЃРІРµРґРµРЅРёСЏ</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="NumDoc" type="fssp:DVarchar25Type" minOccurs="0">
+      <xs:annotation>
+       <xs:documentation>РЅРѕРјРµСЂ РґРѕРєСѓРјРµРЅС‚Р°</xs:documentation>
+       <xs:documentation>РЅРѕРјРµСЂ РґРѕРєСѓРјРµРЅС‚Р°, СѓРґРѕСЃС‚РѕРІРµСЂСЏСЋС‰РµРіРѕ Р»РёС‡РЅРѕСЃС‚СЊ С„РёР·РёС‡РµСЃРєРѕРіРѕ Р»РёС†Р°, РІ РѕС‚РЅРѕС€РµРЅРёРё РєРѕС‚РѕСЂРѕРіРѕ Р·Р°РїСЂР°С€РёРІР°СЋС‚СЃСЏ СЃРІРµРґРµРЅРёСЏ</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="AnswerType" type="fssp:DQueryDatumAnswerType" minOccurs="1">
+      <xs:annotation>
+       <xs:documentation>С‚РёРї РѕС‚РІРµС‚Р°</xs:documentation>
+       <xs:documentation>РЅР°Р»РёС‡РёРµ СЃРІРµРґРµРЅРёР№ РёР»Рё РїСЂРёС‡РёРЅР° РµРіРѕ РЅРµРїСЂРµРґРѕСЃС‚Р°РІР»РµРЅРёСЏ</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="LegalImpossibility" type="fssp:DDescriptionType" minOccurs="0">
+      <xs:annotation>
+       <xs:documentation>РїСЂРёС‡РёРЅС‹ РЅРµРІРѕР·РјРѕР¶РЅРѕСЃС‚Рё РёСЃРїРѕР»РЅРµРЅРёСЏ С‚СЂРµР±РѕРІР°РЅРёР№</xs:documentation>
+       <xs:documentation>РїСЂРёС‡РёРЅС‹ РЅРµРІРѕР·РјРѕР¶РЅРѕСЃС‚Рё РїСЂРµРґРѕСЃС‚Р°РІР»РµРЅРёСЏ РѕС‚РІРµС‚Р° РЅР° Р·Р°РїСЂРѕСЃ РґРѕР»Р¶РЅРѕСЃС‚РЅРѕРіРѕ Р»РёС†Р° Р¤РЎРЎРџ Р РѕСЃСЃРёРё. Р РµРєРІРёР·РёС‚ РѕР±СЏР·Р°С‚РµР»РµРЅ РґР»СЏ Р·Р°РїРѕР»РЅРµРЅРёСЏ, РµСЃР»Рё Р·РЅР°С‡РµРЅРёРµ СЂРµРєРІРёР·РёС‚Р° В«С‚РёРї РѕС‚РІРµС‚Р°В» СЂР°РІРЅРѕ В«13В»</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element ref="fssp:AvailabilityAccData" minOccurs="0" maxOccurs="unbounded">
+      <xs:annotation>
+       <xs:documentation>СЃРІРµРґРµРЅРёСЏ Рѕ СЃС‡РµС‚Рµ</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element ref="fssp:AvailabilityAccDepoData" minOccurs="0" maxOccurs="unbounded">
+      <xs:annotation>
+       <xs:documentation>РЅР°Р»РёС‡РёРµ СЃС‡РµС‚РѕРІ Р”Р•РџРћ</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element ref="fssp:DepositBoxDatum" minOccurs="0" maxOccurs="unbounded">
+      <xs:annotation>
+       <xs:documentation>СЃРІРµРґРµРЅРёСЏ Рѕ РЅР°Р»РёС‡РёРё Р±Р°РЅРєРѕРІСЃРєРёС… СЏС‡РµРµРє</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element ref="fssp:UnstructuredDatum" minOccurs="0" maxOccurs="unbounded">
+      <xs:annotation>
+       <xs:documentation>РЅРµСЃС‚СЂСѓРєС‚СѓСЂРёСЂРѕРІР°РЅРЅС‹Рµ СЃРІРµРґРµРЅРёСЏ</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element ref="fssp:MortgageData" minOccurs="0" maxOccurs="unbounded">
+      <xs:annotation>
+       <xs:documentation>СЃРІРµРґРµРЅРёРµ Рѕ Р·Р°Р»РѕРіРµ</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element ref="fssp:РЎreditHistory" minOccurs="0" maxOccurs="unbounded">
+      <xs:annotation>
+       <xs:documentation>РѕР±СЏР·Р°С‚РµР»СЊСЃС‚РІР° СЃСѓР±СЉРµРєС‚Р° РєСЂРµРґРёС‚РЅРѕР№ РёСЃС‚РѕСЂРёРё</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+    </xs:sequence>
+   </xs:extension>
+  </xs:complexContent>
+ </xs:complexType>
+ <xs:element name="AvailabilityAccData" type="fssp:AvailabilityAccDataType" substitutionGroup="fssp:Object"/>
+ <xs:complexType name="AvailabilityAccDataType">
+  <xs:annotation>
+   <xs:documentation>РЎРІРµРґРµРЅРёСЏ Рѕ СЃС‡РµС‚Рµ</xs:documentation>
+  </xs:annotation>
+  <xs:complexContent>
+   <xs:extension base="fssp:ObjectType">
+    <xs:sequence>
+     <xs:element name="Acc" type="fssp:DAccountType" minOccurs="1">
+      <xs:annotation>
+       <xs:documentation>СЃС‡РµС‚</xs:documentation>
+       <xs:documentation>РЅРѕРјРµСЂ Р±Р°РЅРєРѕРІСЃРєРѕРіРѕ СЃС‡РµС‚Р°, РѕС‚РєСЂС‹С‚С‹Р№ РєР»РёРµРЅС‚Сѓ РІ РєСЂРµРґРёС‚РЅРѕР№ РѕСЂРіР°РЅРёР·Р°С†РёРё (РµРµ С„РёР»РёР°Р»Рµ) РёР»Рё РІ РїРѕРґСЂР°Р·РґРµР»РµРЅРёРё Р±Р°РЅРєР°</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="CurrencyCode" type="fssp:DOkvType" minOccurs="1">
+      <xs:annotation>
+       <xs:documentation>РІР°Р»СЋС‚Р°</xs:documentation>
+       <xs:documentation>РІР°Р»СЋС‚Р° СЃС‡РµС‚Р°</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="BicBank" type="fssp:DBikType" minOccurs="1">
+      <xs:annotation>
+       <xs:documentation>Р‘РРљ</xs:documentation>
+       <xs:documentation>Р‘РРљ РєСЂРµРґРёС‚РЅРѕР№ РѕСЂРіР°РЅРёР·Р°С†РёРё, РІ РєРѕС‚РѕСЂРѕР№ РѕС‚РєСЂС‹С‚ СЃС‡РµС‚</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="PersonalAcc" type="fssp:DVarchar25Type" minOccurs="0">
+      <xs:annotation>
+       <xs:documentation>Р»РёС†РµРІРѕР№ СЃС‡РµС‚</xs:documentation>
+       <xs:documentation>РЅРѕРјРµСЂ Р»РёС†РµРІРѕРіРѕ СЃС‡РµС‚Р° РѕС‚РєСЂС‹С‚С‹Р№ РІ Р±Р°РЅРєРµ (С„РёР»РёР°Р»Рµ) РёР»Рё СѓС‡СЂРµР¶РґРµРЅРёСЏ Р‘Р°РЅРєР° Р РѕСЃСЃРёРё. РЈРєР°Р·С‹РІР°РµС‚СЃСЏ Р»РёС†РµРІРѕР№ СЃС‡РµС‚ РѕСЃРЅРѕРІРЅРѕРіРѕ СЃС‡РµС‚Р°, РЅРѕРјРµСЂ РєСЂРµРґРёС‚РЅРѕР№ РєР°СЂС‚С‹</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="ContractNumber" type="fssp:DVarchar20Type" minOccurs="0">
+      <xs:annotation>
+       <xs:documentation>РЅРѕРјРµСЂ РґРѕРіРѕРІРѕСЂР° Р±Р°РЅРєРѕРІСЃРєРѕРіРѕ СЃС‡РµС‚Р°</xs:documentation>
+       <xs:documentation>РЅРѕРјРµСЂ РґРѕРіРѕРІРѕСЂР° РЅР° РѕС‚РєСЂС‹С‚РёРµ Р±Р°РЅРєРѕРІСЃРєРѕРіРѕ СЃС‡РµС‚Р°</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="ContractStartDate" type="fssp:DDateType" minOccurs="0">
+      <xs:annotation>
+       <xs:documentation>РґР°С‚Р° РЅР°С‡Р°Р»Р° РґРµР№СЃС‚РІРёСЏ РґРѕРіРѕРІРѕСЂР°</xs:documentation>
+       <xs:documentation>РґР°С‚Р° РЅР°С‡Р°Р»Р° РґРµР№СЃС‚РІРёСЏ РґРѕРіРѕРІРѕСЂР° РЅР° РѕС‚РєСЂС‹С‚РёРµ Р±Р°РЅРєРѕРІСЃРєРѕРіРѕ СЃС‡РµС‚Р°</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="ContractFinDate" type="fssp:DDateType" minOccurs="0">
+      <xs:annotation>
+       <xs:documentation>РґР°С‚Р° РѕРєРѕРЅС‡Р°РЅРёСЏ РґРµР№СЃС‚РІРёСЏ РґРѕРіРѕРІРѕСЂР°</xs:documentation>
+       <xs:documentation>РґР°С‚Р° РѕРєРѕРЅС‡Р°РЅРёСЏ РґРµР№СЃС‚РІРёСЏ РґРѕРіРѕРІРѕСЂР° РЅР° РѕС‚РєСЂС‹С‚РёРµ Р±Р°РЅРєРѕРІСЃРєРѕРіРѕ СЃС‡РµС‚Р°. Р РµРєРІРёР·РёС‚ РѕР±СЏР·Р°С‚РµР»РµРЅ РґР»СЏ Р·Р°РїРѕР»РЅРµРЅРёСЏ РІ СЃР»СѓС‡Р°Рµ РїСЂРµРґРѕСЃС‚Р°РІР»РµРЅРёСЏ СЃРІРµРґРµРЅРёР№ РїРѕ Р°СЂС…РёРІРЅС‹Рј СЃС‡РµС‚Р°Рј</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="AccountKindCode" type="fssp:DAccountKindCodeType" minOccurs="1">
+      <xs:annotation>
+       <xs:documentation>РєРѕРґ РІРёРґР° Р±Р°РЅРєРѕРІСЃРєРѕРіРѕ СЃС‡С‘С‚Р°</xs:documentation>
+       <xs:documentation>РєРѕРґ РІРёРґР° Р±Р°РЅРєРѕРІСЃРєРѕРіРѕ СЃС‡С‘С‚Р°</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="IDElectronicmPayment" type="fssp:DExternalKeyType" minOccurs="0">
+      <xs:annotation>
+       <xs:documentation>РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ СЌР»РµРєС‚СЂРѕРЅРЅРѕРіРѕ СЃСЂРµРґСЃС‚РІР° РїР»Р°С‚РµР¶Р°</xs:documentation>
+       <xs:documentation>РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ СЌР»РµРєС‚СЂРѕРЅРЅРѕРіРѕ СЃСЂРµРґСЃС‚РІР° РїР»Р°С‚РµР¶Р°   РЅРѕРјРµСЂ, РєРѕРґ Рё (РёР»Рё) РёРЅРѕР№ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ СЌР»РµРєС‚СЂРѕРЅРЅРѕРіРѕ СЃСЂРµРґСЃС‚РІР° РїР»Р°С‚РµР¶Р°, РїРѕРґС‚РІРµСЂР¶РґР°СЋС‰РёР№ РѕСЃСѓС‰РµСЃС‚РІР»РµРЅРёРµ РѕРїРµСЂР°С†РёРё СЃ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёРµРј СЌР»РµРєС‚СЂРѕРЅРЅРѕРіРѕ СЃСЂРµРґСЃС‚РІР° РїР»Р°С‚РµР¶Р°</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="Amount" type="fssp:DMoneyType" minOccurs="0">
+      <xs:annotation>
+       <xs:documentation>СЃСѓРјРјР° РІ РІР°Р»СЋС‚Рµ СЃС‡РµС‚Р°</xs:documentation>
+       <xs:documentation>СЃСѓРјРјР° РґРµРЅРµР¶РЅС‹С… СЃСЂРµРґСЃС‚РІ, РєРѕС‚РѕСЂР°СЏ С„Р°РєС‚РёС‡РµСЃРєРё РёРјРµРµС‚СЃСЏ РІ РЅР°Р»РёС‡РёРё РЅР° СЃС‡РµС‚Рµ РЅР° РјРѕРјРµРЅС‚ РїСЂРµРґРѕСЃС‚Р°РІР»РµРЅРёСЏ СЃРІРµРґРµРЅРёР№ (РІ РІР°Р»СЋС‚Рµ СЃС‡РµС‚Р°). Р’ СЃР»СѓС‡Р°Рµ, РµСЃР»Рё СЃСѓРјРјР° РЅР° СЃС‡РµС‚Рµ РїСЂРµРІС‹С€Р°РµС‚ РѕР±С‰СѓСЋ СЃСѓРјРјСѓ Р·Р°РґРѕР»Р¶РµРЅРЅРѕСЃС‚Рё, С‚Рѕ РІ СЂРµРєРІРёР·РёС‚Рµ В«СЃСѓРјРјР° РІ РІР°Р»СЋС‚Рµ СЃС‡РµС‚Р°В» РїРµСЂРµРґР°РµС‚СЃСЏ Р·РЅР°С‡РµРЅРёРµ, СЂР°РІРЅРѕРµ СЃСѓРјРјРµ  Р·Р°РґРѕР»Р¶РµРЅРЅРѕСЃС‚Рё</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="AmountRub" type="fssp:DMoneyType" minOccurs="0">
+      <xs:annotation>
+       <xs:documentation>СЃСѓРјРјР° РІ СЂСѓР±Р»СЏС…</xs:documentation>
+       <xs:documentation>СЃСѓРјРјР° РґРµРЅРµР¶РЅС‹С… СЃСЂРµРґСЃС‚РІ, РєРѕС‚РѕСЂР°СЏ С„Р°РєС‚РёС‡РµСЃРєРё РёРјРµРµС‚СЃСЏ РІ РЅР°Р»РёС‡РёРё РЅР° СЃС‡РµС‚Рµ РЅР° РјРѕРјРµРЅС‚ РїСЂРµРґРѕСЃС‚Р°РІР»РµРЅРёСЏ СЃРІРµРґРµРЅРёР№ (РІ СЂСѓР±Р»СЏС…, РїРѕ РєСѓСЂСЃСѓ, СѓСЃС‚Р°РЅРѕРІР»РµРЅРЅРѕРјСѓ Р±Р°РЅРєРѕРј РёР»Рё РёРЅРѕР№ РєСЂРµРґРёС‚РЅРѕР№ РѕСЂРіР°РЅРёР·Р°С†РёРµР№ РЅР° РґРµРЅСЊ РєСѓРїР»Рё-РїСЂРѕРґР°Р¶Рё. РџСЂРё РѕС‚СЃСѓС‚СЃС‚РІРёРё С‚Р°РєРѕРіРѕ РєСѓСЂСЃР° РєСѓРїР»СЏ-РїСЂРѕРґР°Р¶Р° РёРЅРѕСЃС‚СЂР°РЅРЅРѕР№ РІР°Р»СЋС‚С‹ РѕСЃСѓС‰РµСЃС‚РІР»СЏРµС‚СЃСЏ РїРѕ РѕС„РёС†РёР°Р»СЊРЅРѕРјСѓ РєСѓСЂСЃСѓ, СѓСЃС‚Р°РЅРѕРІР»РµРЅРЅРѕРјСѓ Р‘Р°РЅРєРѕРј Р РѕСЃСЃРёРё). Р’ СЃР»СѓС‡Р°Рµ РµСЃР»Рё СЃСѓРјРјР° РЅР° СЃС‡РµС‚Рµ РїСЂРµРІС‹С€Р°РµС‚ РѕР±С‰СѓСЋ СЃСѓРјРјСѓ Р·Р°РґРѕР»Р¶РµРЅРЅРѕСЃС‚Рё, С‚Рѕ РІ СЂРµРєРІРёР·РёС‚Рµ В«СЃСѓРјРјР° РІ РІР°Р»СЋС‚Рµ СЃС‡РµС‚Р°В» РїРµСЂРµРґР°РµС‚СЃСЏ Р·РЅР°С‡РµРЅРёРµ, СЂР°РІРЅРѕРµ СЃСѓРјРјРµ Р·Р°РґРѕР»Р¶РµРЅРЅРѕСЃС‚Рё</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="DeptCode" type="fssp:DVarchar31Type" minOccurs="0">
+      <xs:annotation>
+       <xs:documentation>РєРѕРґ РїРѕРґСЂР°Р·РґРµР»РµРЅРёСЏ</xs:documentation>
+       <xs:documentation>РєРѕРґ РїРѕРґСЂР°Р·РґРµР»РµРЅРёСЏ РєСЂРµРґРёС‚РЅРѕР№ РѕСЂРіР°РЅРёР·Р°С†РёРё, РІ РєРѕС‚РѕСЂРѕР№ РѕС‚РєСЂС‹С‚ СЃС‡РµС‚</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element ref="fssp:AccountTransaction" minOccurs="0" maxOccurs="unbounded">
+      <xs:annotation>
+       <xs:documentation>СЃРІРµРґРµРЅРёСЏ РѕР± РѕРїРµСЂР°С†РёСЏС… РїРѕ СЃС‡РµС‚Сѓ</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element ref="fssp:AccountEncumbranceDatum" minOccurs="0" maxOccurs="unbounded">
+      <xs:annotation>
+       <xs:documentation>cРІРµРґРµРЅРёСЏ РѕР± Р°СЂРµСЃС‚Р°С… Рё РѕР±СЂРµРјРµРЅРµРЅРёСЏС…</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+    </xs:sequence>
+   </xs:extension>
+  </xs:complexContent>
+ </xs:complexType>
+ <xs:element name="AccountEncumbranceDatum" type="fssp:AccountEncumbranceDatumType" substitutionGroup="fssp:Object"/>
+ <xs:complexType name="AccountEncumbranceDatumType">
+  <xs:annotation>
+   <xs:documentation>РЎРІРµРґРµРЅРёСЏ РѕР± Р°СЂРµСЃС‚Р°С… Рё РѕР±СЂРµРјРµРЅРµРЅРёСЏС…</xs:documentation>
+  </xs:annotation>
+  <xs:complexContent>
+   <xs:extension base="fssp:ObjectType">
+    <xs:sequence>
+     <xs:element name="EncumbranceOrg" type="fssp:DEncumbranceOrgType" minOccurs="1">
+      <xs:annotation>
+       <xs:documentation>РѕСЂРіР°РЅРёР·Р°С†РёСЏ, РЅР°РєР»Р°РґС‹РІР°СЋС‰Р°СЏ РѕР±СЂРµРјРµРЅРµРЅРёСЏ</xs:documentation>
+       <xs:documentation>РѕСЂРіР°РЅРёР·Р°С†РёСЏ, РЅР°РєР»Р°РґС‹РІР°СЋС‰Р°СЏ РѕР±СЂРµРјРµРЅРµРЅРёСЏ</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="EncumbranceOrgINN" type="fssp:DInnType" minOccurs="0">
+      <xs:annotation>
+       <xs:documentation>РРќРќ РѕСЂРіР°РЅРёР·Р°С†РёРё, РЅР°РєР»Р°РґС‹РІР°СЋС‰РµР№ РѕР±СЂРµРјРµРЅРµРЅРёСЏ</xs:documentation>
+       <xs:documentation>РРќРќ РѕСЂРіР°РЅРёР·Р°С†РёРё, РЅР°РєР»Р°РґС‹РІР°СЋС‰РµР№ Р°СЂРµСЃС‚/РѕР±СЂРµРјРµРЅРµРЅРёРµ. Р РµРєРІРёР·РёС‚ РѕР±СЏР·Р°С‚РµР»РµРЅ РґР»СЏ Р·Р°РїРѕР»РЅРµРЅРёСЏ, РµСЃР»Рё Р·РЅР°С‡РµРЅРёРµ СЂРµРєРІРёР·РёС‚Р° В«РѕСЂРіР°РЅРёР·Р°С†РёСЏ, РЅР°РєР»Р°РґС‹РІР°СЋС‰Р°СЏ РѕР±СЂРµРјРµРЅРµРЅРёСЏВ» СЂР°РІРЅРѕ В«7В» (РРЅРѕР№ РѕСЂРіР°РЅ/РѕСЂРіР°РЅРёР·Р°С†РёСЏ/РґРѕР»Р¶РЅРѕСЃС‚РЅРѕРµ Р»РёС†Рѕ)</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="Amount" type="fssp:DMoneyType" minOccurs="0">
+      <xs:annotation>
+       <xs:documentation>СЃСѓРјРјР° Р°СЂРµСЃС‚Р°/РѕР±СЂРµРјРµРЅРµРЅРёСЏ</xs:documentation>
+       <xs:documentation>СЃСѓРјРјР° Р°СЂРµСЃС‚Р°/РѕР±СЂРµРјРµРЅРµРЅРёСЏ. Р РµРєРІРёР·РёС‚ РѕР±СЏР·Р°С‚РµР»РµРЅ РґР»СЏ Р·Р°РїРѕР»РЅРµРЅРёСЏ, РµСЃР»Рё СЂРµРєРІРёР·РёС‚ В«РѕСЂРіР°РЅРёР·Р°С†РёСЏ, РЅР°РєР»Р°РґС‹РІР°СЋС‰Р°СЏ РѕР±СЂРµРјРµРЅРµРЅРёСЏВ» Р·Р°РїРѕР»РЅРµРЅ Рё РµРіРѕ Р·РЅР°С‡РµРЅРёРµ РЅРµ СЂР°РІРЅРѕ В«1 вЂ” Р¤РќРЎ Р РѕСЃСЃРёРёВ»</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="Date" type="fssp:DDateType" minOccurs="1">
+      <xs:annotation>
+       <xs:documentation>РґР°С‚Р° Р°СЂРµСЃС‚Р°/РѕР±СЂРµРјРµРЅРµРЅРёСЏ</xs:documentation>
+       <xs:documentation>РґР°С‚Р° Р°СЂРµСЃС‚Р°/РѕР±СЂРµРјРµРЅРµРЅРёСЏ</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="Priority" type="fssp:DEncumbrancePriorityType" minOccurs="0">
+      <xs:annotation>
+       <xs:documentation>РѕС‡РµСЂС‘РґРЅРѕСЃС‚СЊ</xs:documentation>
+       <xs:documentation>РѕС‡РµСЂРµРґРЅРѕСЃС‚СЊ. РЈРєР°Р·С‹РІР°РµС‚СЃСЏ Р·РЅР°С‡РµРЅРёРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅРЅРѕРµ, РІ СЃРѕРѕС‚РІРµС‚СЃС‚РІРёРµ СЃРѕ СЃС‚Р°С‚СЊРµР№ 855 Р“СЂР°Р¶РґР°РЅСЃРєРѕРіРѕ РєРѕРґРµРєСЃР° Р РѕСЃСЃРёР№СЃРєРѕР№ Р¤РµРґРµСЂР°С†РёРё.</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="IPNumber" type="fssp:DDocnumberType" minOccurs="0">
+      <xs:annotation>
+       <xs:documentation>РЅРѕРјРµСЂ РРџ</xs:documentation>
+       <xs:documentation>РЅРѕРјРµСЂ РРџ, РІ СЂР°РјРєР°С… РєРѕС‚РѕСЂРѕРіРѕ РЅР°Р»РѕР¶РµРЅ Р°СЂРµСЃС‚/РѕР±СЂРµРјРµРЅРµРЅРёРµ. Р РµРєРІРёР·РёС‚ РѕР±СЏР·Р°С‚РµР»РµРЅ РґР»СЏ Р·Р°РїРѕР»РЅРµРЅРёСЏ, РµСЃР»Рё  Р·РЅР°С‡РµРЅРёРµ СЂРµРєРІРёР·РёС‚Р° В«РѕСЂРіР°РЅРёР·Р°С†РёСЏ, РЅР°РєР»Р°РґС‹РІР°СЋС‰Р°СЏ РѕР±СЂРµРјРµРЅРµРЅРёСЏВ» СЂР°РІРЅРѕ В«2 вЂ” Р¤РЎРЎРџ Р РѕСЃСЃРёРёВ»</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="DocNumber" type="fssp:DDocnumberType" minOccurs="0">
+      <xs:annotation>
+       <xs:documentation>РЅРѕРјРµСЂ РїРѕСЃС‚Р°РЅРѕРІР»РµРЅРёСЏ</xs:documentation>
+       <xs:documentation>РЅРѕРјРµСЂ РїРѕСЃС‚Р°РЅРѕРІР»РµРЅРёСЏ, РїРѕ РєРѕС‚РѕСЂРѕРјСѓ РЅР°Р»РѕР¶РµРЅ Р°СЂРµСЃС‚/РѕР±СЂРµРјРµРЅРµРЅРёРµ. Р РµРєРІРёР·РёС‚ Р·Р°РїРѕР»РЅСЏРµС‚СЃСЏ, РµСЃР»Рё  Р·РЅР°С‡РµРЅРёРµ СЂРµРєРІРёР·РёС‚Р° В«РћСЂРіР°РЅРёР·Р°С†РёСЏ, РЅР°РєР»Р°РґС‹РІР°СЋС‰Р°СЏ РѕР±СЂРµРјРµРЅРµРЅРёСЏВ» СЂР°РІРЅРѕ В«2 вЂ” Р¤РЎРЎРџ Р РѕСЃСЃРёРёВ» (РїСЂРё РЅР°Р»РёС‡РёРё СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РµР№ РёРЅС„РѕСЂРјР°С†РёРё)</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="OSPCode" type="fssp:DVkspType" minOccurs="0">
+      <xs:annotation>
+       <xs:documentation>РєРѕРґ РѕС‚РґРµР»Р° СЃСѓРґРµР±РЅС‹С… РїСЂРёСЃС‚Р°РІРѕРІ</xs:documentation>
+       <xs:documentation>РєРѕРґ РћРЎРџ, РІ РєРѕС‚РѕСЂРѕРј РЅР°Р»РѕР¶РµРЅ(Рѕ) Р°СЂРµСЃС‚/РѕР±СЂРµРјРµРЅРµРЅРёРµ. Р РµРєРІРёР·РёС‚ Р·Р°РїРѕР»РЅСЏРµС‚СЃСЏ, РµСЃР»Рё  Р·РЅР°С‡РµРЅРёРµ СЂРµРєРІРёР·РёС‚Р° В«РћСЂРіР°РЅРёР·Р°С†РёСЏ, РЅР°РєР»Р°РґС‹РІР°СЋС‰Р°СЏ РѕР±СЂРµРјРµРЅРµРЅРёСЏВ» СЂР°РІРЅРѕ В«2 вЂ” Р¤РЎРЎРџ Р РѕСЃСЃРёРёВ» (РїСЂРё РЅР°Р»РёС‡РёРё СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РµР№ РёРЅС„РѕСЂРјР°С†РёРё)</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+    </xs:sequence>
+   </xs:extension>
+  </xs:complexContent>
+ </xs:complexType>
+ <xs:element name="AccountTransaction" type="fssp:AccountTransactionType" substitutionGroup="fssp:Object"/>
+ <xs:complexType name="AccountTransactionType">
+  <xs:annotation>
+   <xs:documentation>РћРїРµСЂР°С†РёРё РїРѕ СЃС‡РµС‚Сѓ</xs:documentation>
+  </xs:annotation>
+  <xs:complexContent>
+   <xs:extension base="fssp:ObjectType">
+    <xs:sequence>
+     <xs:element name="TransactionType" type="fssp:DAccountTransactionType" minOccurs="1">
+      <xs:annotation>
+       <xs:documentation>С‚РёРї РѕРїРµСЂР°С†РёРё</xs:documentation>
+       <xs:documentation>С‚РёРї РѕРїРµСЂР°С†РёРё</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="TransactionDate" type="fssp:DDateType" minOccurs="1">
+      <xs:annotation>
+       <xs:documentation>РґР°С‚Р° РѕРїРµСЂР°С†РёРё</xs:documentation>
+       <xs:documentation>РґР°С‚Р° СЃРѕРІРµСЂС€РµРЅРёСЏ РѕРїРµСЂР°С†РёРё РёР»Рё РґР°С‚Р° РѕСЃС‚Р°С‚РєР°</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="Amount" type="fssp:DMoneyType" minOccurs="1">
+      <xs:annotation>
+       <xs:documentation>СЃСѓРјРјР° РѕРїРµСЂР°С†РёРё</xs:documentation>
+       <xs:documentation>СЃСѓРјРјР° РѕРїРµСЂР°С†РёРё РёР»Рё СЃСѓРјРјР° РѕСЃС‚Р°С‚РєР°</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="CorrBIK" type="fssp:DBikType" minOccurs="0">
+      <xs:annotation>
+       <xs:documentation>Р‘РРљ Р±Р°РЅРєР° РєРѕСЂСЂРµСЃРїРѕРЅРґРµРЅС‚Р°</xs:documentation>
+       <xs:documentation>РјРѕР¶РµС‚ Р±С‹С‚СЊ СѓРєР°Р·Р°РЅРѕ Р·РЅР°С‡РµРЅРёРµ: Р‘РРљ Р±Р°РЅРєР° РєРѕСЂСЂРµСЃРїРѕРЅРґРµРЅС‚Р° РёР»Рё SWIFT BIC Р±Р°РЅРєР° РєРѕСЂСЂРµСЃРїРѕРЅРґРµРЅС‚Р°. Р РµРєРІРёР·РёС‚ РѕР±СЏР·Р°С‚РµР»РµРЅ РґР»СЏ Р·Р°РїРѕР»РЅРµРЅРёСЏ, РµСЃР»Рё: РЅРµ Р·Р°РїРѕР»РЅРµРЅ СЂРµРєРІРёР·РёС‚ В«РќР°С†РёРѕРЅР°Р»СЊРЅС‹Р№ РєРѕРґВ»; С‚РёРї РѕРїРµСЂР°С†РёРё В«1В» - РџСЂРёС…РѕРґ, В«2В» - Р Р°СЃС…РѕРґ. Р РµРєРІРёР·РёС‚ РЅРµРѕР±СЏР·Р°С‚РµР»РµРЅ РґР»СЏ Р·Р°РїРѕР»РЅРµРЅРёСЏ РІ СЃР»СѓС‡Р°Рµ РµСЃР»Рё С‚РёРї РѕРїРµСЂР°С†РёРё В«3В» - РћСЃС‚Р°С‚РѕРє РЅР° РЅР°С‡Р°Р»Рѕ, В«4В» - РћСЃС‚Р°С‚РѕРє РЅР° РєРѕРЅРµС†</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="CorrAccountNumber" type="fssp:DAccountType" minOccurs="0">
+      <xs:annotation>
+       <xs:documentation>РєРѕСЂ.СЃС‡РµС‚</xs:documentation>
+       <xs:documentation>РЅРѕРјРµСЂ РєРѕСЂСЂРµСЃРїРѕРЅРґРµРЅС‚СЃРєРѕРіРѕ СЃС‡РµС‚Р°. Р РµРєРІРёР·РёС‚ РѕР±СЏР·Р°С‚РµР»РµРЅ РґР»СЏ Р·Р°РїРѕР»РЅРµРЅРёСЏ РµСЃР»Рё СЂРµРєРІРёР·РёС‚ В«С‚РёРї РѕРїРµСЂР°С†РёРёВ» СЂР°РІРµРЅ РѕРґРЅРѕРјСѓ РёР· Р·РЅР°С‡РµРЅРёР№: В«1В» - РџСЂРёС…РѕРґ, В«2В» - Р Р°СЃС…РѕРґ. Р РµРєРІРёР·РёС‚ РЅРµ РѕР±СЏР·Р°С‚РµР»РµРЅ РґР»СЏ Р·Р°РїРѕР»РЅРµРЅРёСЏ РІ СЃР»СѓС‡Р°Рµ,  РµСЃР»Рё  СЂРµРєРІРёР·РёС‚ В«РўРёРї РѕРїРµСЂР°С†РёРёВ» СЂР°РІРµРЅ РѕРґРЅРѕРјСѓ РёР· Р·РЅР°С‡РµРЅРёР№: В«3В» - РћСЃС‚Р°С‚РѕРє РЅР° РЅР°С‡Р°Р»Рѕ, В«4В» - РћСЃС‚Р°С‚РѕРє РЅР° РєРѕРЅРµС†/ Р РµРєРІРёР·РёС‚ РЅРµ РѕР±СЏР·Р°С‚РµР»РµРЅ РґР»СЏ Р·Р°РїРѕР»РЅРµРЅРёСЏ РїСЂРё РїРµСЂРµРґР°С‡Рё СЃРІРµРґРµРЅРёР№ Рѕ РїР»Р°С‚РµР¶Р°С… РІ Р°РґСЂРµСЃ Р¤РµРґРµСЂР°Р»СЊРЅРѕРіРѕ РєР°Р·РЅР°С‡РµР№СЃС‚РІР°</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="NationalРЎlearingРЎode" type="fssp:DClearCode" minOccurs="0">
+      <xs:annotation>
+       <xs:documentation>РЅР°С†РёРѕРЅР°Р»СЊРЅС‹Р№ РєРѕРґ</xs:documentation>
+       <xs:documentation>РЅР°С†РёРѕРЅР°Р»СЊРЅС‹Р№ РєР»РёСЂРёРЅРіРѕРІС‹Р№ РєРѕРґ вЂ“ РєРѕРґ РёРґРµРЅС‚РёС„РёРєР°С†РёРё Р±Р°РЅРєРѕРІ РІ РЅР°С†РёРѕРЅР°Р»СЊРЅС‹С… РєР»РёСЂРёРЅРіРѕРІС‹С… СЃРёСЃС‚РµРјР°С… СЂР°Р·Р»РёС‡РЅС‹С… СЃС‚СЂР°РЅ. Р РµРєРІРёР·РёС‚ РѕР±СЏР·Р°С‚РµР»РµРЅ РґР»СЏ Р·Р°РїРѕР»РЅРµРЅРёСЏ, РµСЃР»Рё: РЅРµ Р·Р°РїРѕР»РЅРµРЅ СЂРµРєРІРёР·РёС‚ В«Р‘РРљ Р±Р°РЅРєР° РєРѕСЂСЂРµСЃРїРѕРЅРґРµРЅС‚Р°В»; С‚РёРї РѕРїРµСЂР°С†РёРё В«1В» вЂ“ РїСЂРёС…РѕРґ, В«2В» вЂ“ СЂР°СЃС…РѕРґ. Р РµРєРІРёР·РёС‚ РЅРµРѕР±СЏР·Р°С‚РµР»РµРЅ РґР»СЏ Р·Р°РїРѕР»РЅРµРЅРёСЏ РІ СЃР»СѓС‡Р°Рµ, РµСЃР»Рё С‚РёРї РѕРїРµСЂР°С†РёРё В«3В» вЂ“  РѕСЃС‚Р°С‚РѕРє РЅР° РЅР°С‡Р°Р»Рѕ, В«4В» вЂ“ РѕСЃС‚Р°С‚РѕРє РЅР° РєРѕРЅРµС†.</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="Grounds" type="fssp:DDescriptionType" minOccurs="0">
+      <xs:annotation>
+       <xs:documentation>РѕСЃРЅРѕРІР°РЅРёРµ</xs:documentation>
+       <xs:documentation>РѕСЃРЅРѕРІР°РЅРёРµ СЃРѕРІРµСЂС€РµРЅРёСЏ РѕРїРµСЂР°С†РёРё (РЅР°Р·РЅР°С‡РµРЅРёРµ РїР»Р°С‚РµР¶Р°). Р РµРєРІРёР·РёС‚ РѕР±СЏР·Р°С‚РµР»РµРЅ РґР»СЏ Р·Р°РїРѕР»РЅРµРЅРёСЏ РµСЃР»Рё СЂРµРєРІРёР·РёС‚ В«РўРёРї РѕРїРµСЂР°С†РёРёВ» СЂР°РІРµРЅ РѕРґРЅРѕРјСѓ РёР· Р·РЅР°С‡РµРЅРёР№: В«1В» - РџСЂРёС…РѕРґ, В«2В» - Р Р°СЃС…РѕРґ. Р РµРєРІРёР·РёС‚ РЅРµ РѕР±СЏР·Р°С‚РµР»РµРЅ РґР»СЏ Р·Р°РїРѕР»РЅРµРЅРёСЏ РІ СЃР»СѓС‡Р°Рµ РµСЃР»Рё СЂРµРєРІРёР·РёС‚ В«С‚РёРї РѕРїРµСЂР°С†РёРёВ» СЂР°РІРµРЅ РѕРґРЅРѕРјСѓ РёР· Р·РЅР°С‡РµРЅРёР№: В«3В» - РћСЃС‚Р°С‚РѕРє РЅР° РЅР°С‡Р°Р»Рѕ, В«4В» - РћСЃС‚Р°С‚РѕРє РЅР° РєРѕРЅРµС†</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+    </xs:sequence>
+   </xs:extension>
+  </xs:complexContent>
+ </xs:complexType>
+ <xs:element name="AvailabilityAccDepoData" type="fssp:AvailabilityAccDepoDataType" substitutionGroup="fssp:Object"/>
+ <xs:complexType name="AvailabilityAccDepoDataType">
+  <xs:annotation>
+   <xs:documentation>РќР°Р»РёС‡РёРµ СЃС‡РµС‚РѕРІ Р”Р•РџРћ</xs:documentation>
+  </xs:annotation>
+  <xs:complexContent>
+   <xs:extension base="fssp:ObjectType">
+    <xs:sequence>
+     <xs:element name="StrAcc" type="fssp:DVarchar20Type" minOccurs="1">
+      <xs:annotation>
+       <xs:documentation>СЃС‡РµС‚ Р”Р•РџРћ</xs:documentation>
+       <xs:documentation>РЅРѕРјРµСЂ СЃС‡РµС‚Р° Р”Р•РџРћ, РЅР° РєРѕС‚РѕСЂРѕРј РёРјРµСЋС‚СЃСЏ СѓС‡С‚РµРЅРЅС‹Рµ С†РµРЅРЅС‹Рµ Р±СѓРјР°РіРё</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="BicBank" type="fssp:DBikType" minOccurs="1">
+      <xs:annotation>
+       <xs:documentation>Р‘РРљ</xs:documentation>
+       <xs:documentation>Р‘РРљ РєСЂРµРґРёС‚РЅРѕР№ РѕСЂРіР°РЅРёР·Р°С†РёРё, РІ РєРѕС‚РѕСЂРѕР№ РѕС‚РєСЂС‹С‚ СЃС‡РµС‚ Р”Р•РџРћ</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="DeptCode" type="fssp:DVarchar31Type" minOccurs="0">
+      <xs:annotation>
+       <xs:documentation>РєРѕРґ РїРѕРґСЂР°Р·РґРµР»РµРЅРёСЏ</xs:documentation>
+       <xs:documentation>РєРѕРґ РїРѕРґСЂР°Р·РґРµР»РµРЅРёСЏ РєСЂРµРґРёС‚РЅРѕР№ РѕСЂРіР°РЅРёР·Р°С†РёРё, РІ РєРѕС‚РѕСЂРѕР№ РѕС‚РєСЂС‹С‚ СЃС‡РµС‚ Р”Р•РџРћ</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+    </xs:sequence>
+   </xs:extension>
+  </xs:complexContent>
+ </xs:complexType>
+ <xs:element name="DepositBoxDatum" type="fssp:DepositBoxDatumType" substitutionGroup="fssp:Object"/>
+ <xs:complexType name="DepositBoxDatumType">
+  <xs:annotation>
+   <xs:documentation>РЎРІРµРґРµРЅРёСЏ Рѕ РЅР°Р»РёС‡РёРё Р±Р°РЅРєРѕРІСЃРєРёС… СЏС‡РµРµРє</xs:documentation>
+  </xs:annotation>
+  <xs:complexContent>
+   <xs:extension base="fssp:ObjectType">
+    <xs:sequence>
+     <xs:element name="ContractNumber" type="fssp:DDocnumberType" minOccurs="1">
+      <xs:annotation>
+       <xs:documentation>РЅРѕРјРµСЂ РґРѕРіРѕРІРѕСЂР°</xs:documentation>
+       <xs:documentation>РЅРѕРјРµСЂ РґРѕРіРѕРІРѕСЂР° Р°СЂРµРЅРґС‹ Р±Р°РЅРєРѕРІСЃРєРѕР№ СЏС‡РµР№РєРё</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="ContractDate" type="fssp:DDateType" minOccurs="1">
+      <xs:annotation>
+       <xs:documentation>РґР°С‚Р° Р·Р°РєР»СЋС‡РµРЅРёСЏ РґРѕРіРѕРІРѕСЂР°</xs:documentation>
+       <xs:documentation>РґР°С‚Р° Р·Р°РєР»СЋС‡РµРЅРёСЏ РґРѕРіРѕРІРѕСЂР° Р°СЂРµРЅРґС‹ Р±Р°РЅРєРѕРІСЃРєРѕР№ СЏС‡РµР№РєРё</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="BankDepartment" type="fssp:DDescriptionType" minOccurs="1">
+      <xs:annotation>
+       <xs:documentation>РЅР°РёРјРµРЅРѕРІР°РЅРёРµ РѕС‚РґРµР»РµРЅРёСЏ</xs:documentation>
+       <xs:documentation>РЅР°РёРјРµРЅРѕРІР°РЅРёРµ РѕС‚РґРµР»РµРЅРёСЏ Р±Р°РЅРєР°, РІ РєРѕС‚РѕСЂРѕРј РЅР°С…РѕРґРёС‚СЃСЏ Р°СЂРµРЅРґРѕРІР°РЅРЅР°СЏ СЏС‡РµР№РєР°</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="BankAddress" type="fssp:DAddrType" minOccurs="1">
+      <xs:annotation>
+       <xs:documentation>Р°РґСЂРµСЃ РѕС‚РґРµР»РµРЅРёСЏ</xs:documentation>
+       <xs:documentation>Р°РґСЂРµСЃ РѕС‚РґРµР»РµРЅРёСЏ Р±Р°РЅРєР°, РІ РєРѕС‚РѕСЂРѕРј РЅР°С…РѕРґРёС‚СЃСЏ Р°СЂРµРЅРґРѕРІР°РЅРЅР°СЏ СЏС‡РµР№РєР°</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+    </xs:sequence>
+   </xs:extension>
+  </xs:complexContent>
+ </xs:complexType>
+ <xs:element name="UnstructuredDatum" type="fssp:UnstructuredDatumType" substitutionGroup="fssp:Object"/>
+ <xs:complexType name="UnstructuredDatumType">
+  <xs:annotation>
+   <xs:documentation>РќРµСЃС‚СЂСѓРєС‚СѓСЂРёСЂРѕРІР°РЅРЅС‹Рµ СЃРІРµРґРµРЅРёСЏ</xs:documentation>
+  </xs:annotation>
+  <xs:complexContent>
+   <xs:extension base="fssp:ObjectType">
+    <xs:sequence>
+     <xs:element name="TextDatums" type="fssp:DTextType" minOccurs="1">
+      <xs:annotation>
+       <xs:documentation>СЃРІРµРґРµРЅРёСЏ</xs:documentation>
+       <xs:documentation>РѕРїРёСЃР°РЅРёРµ СЃРІРµРґРµРЅРёСЏ</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+    </xs:sequence>
+   </xs:extension>
+  </xs:complexContent>
+ </xs:complexType>
+ <xs:element name="MortgageData" type="fssp:MortgageDataType" substitutionGroup="fssp:Object"/>
+ <xs:complexType name="MortgageDataType">
+  <xs:annotation>
+   <xs:documentation>РЎРІРµРґРµРЅРёСЏ Рѕ Р·Р°Р»РѕРіРµ</xs:documentation>
+  </xs:annotation>
+  <xs:complexContent>
+   <xs:extension base="fssp:ObjectType">
+    <xs:sequence>
+     <xs:element name="MortgageContagentType" type="fssp:DMortgageContagentType" minOccurs="1">
+      <xs:annotation>
+       <xs:documentation>С‚РёРї РґРѕР»Р¶РЅРёРєР°</xs:documentation>
+       <xs:documentation>С‚РёРї РґРѕР»Р¶РЅРёРєР°. РЈРєР°Р·С‹РІР°РµС‚СЃСЏ СЏРІР»СЏРµС‚СЃСЏ Р»Рё РґРѕР»Р¶РЅРёРє Р·Р°Р»РѕРіРѕРґР°С‚РµР»РµРј РёР»Рё Р·Р°Р»РѕРіРѕРґРµСЂР¶Р°С‚РµР»РµРј</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="PropertyType" type="fssp:DObligationPropertyKindType" minOccurs="1">
+      <xs:annotation>
+       <xs:documentation>РІРёРґ РёРјСѓС‰РµСЃС‚РІР°</xs:documentation>
+       <xs:documentation>РІРёРґ РёРјСѓС‰РµСЃС‚РІР°</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="MortgageKind" type="fssp:DObligationPropertyType" minOccurs="1">
+      <xs:annotation>
+       <xs:documentation>РІРёРґ РѕР±СЏР·Р°С‚РµР»СЊСЃС‚РІР°</xs:documentation>
+       <xs:documentation>РІРёРґ РѕР±СЏР·Р°С‚РµР»СЊСЃС‚РІР°</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="MortgageNoticeNumber" type="fssp:DDocnumberType" minOccurs="0">
+      <xs:annotation>
+       <xs:documentation>РЅРѕРјРµСЂ СѓРІРµРґРѕРјР»РµРЅРёСЏ Рѕ Р·Р°Р»РѕРіРµ</xs:documentation>
+       <xs:documentation>СЂРµРіРёСЃС‚СЂР°С†РёРѕРЅРЅС‹Р№ РЅРѕРјРµСЂ СѓРІРµРґРѕРјР»РµРЅРёСЏ Рѕ Р·Р°Р»РѕРіРµ РґРІРёР¶РёРјРѕРіРѕ РёРјСѓС‰РµСЃС‚РІР°. Р РµРєРІРёР·РёС‚ РѕР±СЏР·Р°С‚РµР»РµРЅ РґР»СЏ Р·Р°РїРѕР»РЅРµРЅРёСЏ, РµСЃР»Рё Р·РЅР°С‡РµРЅРёРµ СЂРµРєРІРёР·РёС‚Р° В«РІРёРґ РѕР±СЏР·Р°С‚РµР»СЊСЃС‚РІР°В» СЂР°РІРЅРѕ В«3В»</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="MortgageNoticeDate" type="fssp:DDateType" minOccurs="0">
+      <xs:annotation>
+       <xs:documentation>РґР°С‚Р° СѓРІРµРґРѕРјР»РµРЅРёСЏ Рѕ Р·Р°Р»РѕРіРµ</xs:documentation>
+       <xs:documentation>СЂРµРіРёСЃС‚СЂР°С†РёРѕРЅРЅР°СЏ РґР°С‚Р° СѓРІРµРґРѕРјР»РµРЅРёСЏ Рѕ Р·Р°Р»РѕРіРµ РґРІРёР¶РёРјРѕРіРѕ РёРјСѓС‰РµСЃС‚РІР°. Р РµРєРІРёР·РёС‚ РѕР±СЏР·Р°С‚РµР»РµРЅ РґР»СЏ Р·Р°РїРѕР»РЅРµРЅРёСЏ, РµСЃР»Рё Р·РЅР°С‡РµРЅРёРµ СЂРµРєРІРёР·РёС‚Р° В«РІРёРґ РѕР±СЏР·Р°С‚РµР»СЊСЃС‚РІР°В» СЂР°РІРЅРѕ В«3В»</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="NameContract" type="fssp:DVarchar4000Type" minOccurs="0">
+      <xs:annotation>
+       <xs:documentation>РЅР°РёРјРµРЅРѕРІР°РЅРёРµ РґРѕРіРѕРІРѕСЂР°</xs:documentation>
+       <xs:documentation>РЅР°РёРјРµРЅРѕРІР°РЅРёРµ РґРѕРіРѕРІРѕСЂР°</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="ContractDate" type="fssp:DDateType" minOccurs="0">
+      <xs:annotation>
+       <xs:documentation>РґР°С‚Р° РІС‹РґР°С‡Рё РґРѕРіРѕРІРѕСЂР°</xs:documentation>
+       <xs:documentation>РґР°С‚Р° Р·Р°РєР»СЋС‡РµРЅРёСЏ РґРѕРіРѕРІРѕСЂР° Р·Р°Р»РѕРіР°. Р РµРєРІРёР·РёС‚ РѕР±СЏР·Р°С‚РµР»РµРЅ РґР»СЏ Р·Р°РїРѕР»РЅРµРЅРёСЏ, РµСЃР»Рё Р·РЅР°С‡РµРЅРёРµ СЂРµРєРІРёР·РёС‚Р° В«РІРёРґ РѕР±СЏР·Р°С‚РµР»СЊСЃС‚РІР°В» СЂР°РІРЅРѕ В«1В» РёР»Рё В«2В»</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="ContractNumber" type="fssp:DDocnumberType" minOccurs="0">
+      <xs:annotation>
+       <xs:documentation>РЅРѕРјРµСЂ РґРѕРіРѕРІРѕСЂР° Рѕ Р·Р°Р»РѕРіРµ</xs:documentation>
+       <xs:documentation>РЅРѕРјРµСЂ РґРѕРіРѕРІРѕСЂР° Р·Р°Р»РѕРіР° РёР»Рё РёРЅРѕР№ СЃРґРµР»РєРё, РЅР° РѕСЃРЅРѕРІР°РЅРёРё РєРѕС‚РѕСЂРѕР№ РёР»Рё РІСЃР»РµРґСЃС‚РІРёРµ СЃРѕРІРµСЂС€РµРЅРёСЏ РєРѕС‚РѕСЂРѕР№ РІРѕР·РЅРёРєР°РµС‚ Р·Р°Р»РѕРі. Р РµРєРІРёР·РёС‚ РѕР±СЏР·Р°С‚РµР»РµРЅ РґР»СЏ Р·Р°РїРѕР»РЅРµРЅРёСЏ, РµСЃР»Рё Р·РЅР°С‡РµРЅРёРµ СЂРµРєРІРёР·РёС‚Р° В«РІРёРґ РѕР±СЏР·Р°С‚РµР»СЊСЃС‚РІР°В» СЂР°РІРЅРѕ В«1В» РёР»Рё В«2В»</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="ContractEndDate" type="fssp:DDateType" minOccurs="0">
+      <xs:annotation>
+       <xs:documentation>РґР°С‚Р° РѕРєРѕРЅС‡Р°РЅРёСЏ РґРѕРіРѕРІРѕСЂР°</xs:documentation>
+       <xs:documentation>РґР°С‚Р° РѕРєРѕРЅС‡Р°РЅРёСЏ РґРѕРіРѕРІРѕСЂР°</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="MortgageDescription" type="fssp:DVarchar4000Type" minOccurs="1">
+      <xs:annotation>
+       <xs:documentation>РѕРїРёСЃР°РЅРёРµ РїСЂРµРґРјРµС‚Р° Р·Р°Р»РѕРіР°</xs:documentation>
+       <xs:documentation>РѕРїРёСЃР°РЅРёРµ РїСЂРµРґРјРµС‚Р° Р·Р°Р»РѕРіР°</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="MortgageVIN" type="fssp:DVarchar20Type" minOccurs="0">
+      <xs:annotation>
+       <xs:documentation>VIN</xs:documentation>
+       <xs:documentation>РёРґРµРЅС‚РёС„РёРєР°С†РёРѕРЅРЅС‹Р№ РЅРѕРјРµСЂ С‚СЂР°РЅСЃРїРѕСЂС‚РЅРѕРіРѕ СЃСЂРµРґСЃС‚РІР° (VIN)</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="MortgageId" type="fssp:DExternalKeyType" minOccurs="0">
+      <xs:annotation>
+       <xs:documentation>РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РёРјСѓС‰РµСЃС‚РІР°</xs:documentation>
+       <xs:documentation>С†РёС„СЂРѕРІРѕРµ РёР»Рё Р±СѓРєРІРµРЅРЅРѕРµ РѕР±РѕР·РЅР°С‡РµРЅРёСЏ Р»РёР±Рѕ РєРѕРјР±РёРЅР°С†РёРё С‚Р°РєРёС… РѕР±РѕР·РЅР°С‡РµРЅРёР№, РєРѕС‚РѕСЂС‹Рµ РёРґРµРЅС‚РёС„РёС†РёСЂСѓСЋС‚ Р·Р°Р»РѕР¶РµРЅРЅРѕРµ РёРјСѓС‰РµСЃС‚РІРѕ</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="Amount" type="fssp:DMoneyType" minOccurs="0">
+      <xs:annotation>
+       <xs:documentation>СЃСѓРјРјР° РґРѕРіРѕРІРѕСЂР°</xs:documentation>
+       <xs:documentation>СЃСѓРјРјР° РґРѕРіРѕРІРѕСЂР°. Р РµРєРІРёР·РёС‚ РѕР±СЏР·Р°С‚РµР»РµРЅ РґР»СЏ Р·Р°РїРѕР»РЅРµРЅРёСЏ, РµСЃР»Рё Р·РЅР°С‡РµРЅРёРµ СЂРµРєРІРёР·РёС‚Р° В«РІРёРґ РѕР±СЏР·Р°С‚РµР»СЊСЃС‚РІР°В» СЂР°РІРЅРѕ В«1В» РёР»Рё В«2В»</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element ref="fssp:MortgageContagentInfo" minOccurs="1" maxOccurs="unbounded">
+      <xs:annotation>
+       <xs:documentation>СѓРєР°Р·С‹РІР°РµС‚СЃСЏ РёРЅС„РѕСЂРјР°С†РёСЏ Рѕ Р·Р°Р»РѕРіРѕРґР°С‚РµР»СЏС…, РµСЃР»Рё Р·РЅР°С‡РµРЅРёРµ СЂРµРєРІРёР·РёС‚Р° В«С‚РёРї РґРѕР»Р¶РЅРёРєР°В» СЂР°РІРЅРѕ 2. РЈРєР°Р·С‹РІР°РµС‚СЃСЏ РёРЅС„РѕСЂРјР°С†РёСЏ Рѕ Р·Р°Р»РѕРіРѕРґРµСЂР¶Р°С‚РµР»СЏС…, РµСЃР»Рё Р·РЅР°С‡РµРЅРёРµ СЂРµРєРІРёР·РёС‚Р° В«С‚РёРї РґРѕР»Р¶РЅРёРєР°В» СЂР°РІРЅРѕ 1</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+    </xs:sequence>
+   </xs:extension>
+  </xs:complexContent>
+ </xs:complexType>
+ <xs:element name="MortgageContagentInfo" type="fssp:ContragentType" substitutionGroup="fssp:Object"/>
+ <xs:complexType name="ContragentType">
+  <xs:annotation>
+   <xs:documentation>CРІРµРґРµРЅРёРµ Рѕ С„РёР·РёС‡РµСЃРєРѕРј Р»РёС†Рµ РёР»Рё РѕСЂРіР°РЅРёР·Р°С†РёРё</xs:documentation>
+  </xs:annotation>
+  <xs:complexContent>
+   <xs:extension base="fssp:ObjectType">
+    <xs:sequence>
+     <xs:element name="DebtorType" type="fssp:DDbtrType" minOccurs="1">
+      <xs:annotation>
+       <xs:documentation>С‚РёРї Р»РёС†Р° РёР»Рё РѕСЂРіР°РЅРёР·Р°С†РёРё</xs:documentation>
+       <xs:documentation>С‚РёРї Р»РёС†Р° РёР»Рё РѕСЂРіР°РЅРёР·Р°С†РёРё</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="Name" type="fssp:DDescriptionType" minOccurs="1">
+      <xs:annotation>
+       <xs:documentation>Р¤.Р.Рћ РёР»Рё РЅР°РёРјРµРЅРѕРІР°РЅРёРµ РѕСЂРіР°РЅРёР·Р°С†РёРё</xs:documentation>
+       <xs:documentation>РЅР°РёРјРµРЅРѕРІР°РЅРёРµ РѕСЂРіР°РЅРёР·Р°С†РёРё РёР»Рё Р¤.Р.Рћ. Р»РёС†Р°</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="Adr" type="fssp:DAddrType" minOccurs="1">
+      <xs:annotation>
+       <xs:documentation>Р°РґСЂРµСЃ</xs:documentation>
+       <xs:documentation>Р°РґСЂРµСЃ РѕСЂРіР°РЅРёР·Р°С†РёРё РёР»Рё Р»РёС†Р° (РјРµСЃС‚Рѕ Р¶РёС‚РµР»СЊСЃС‚РІР° РёР»Рё РјРµСЃС‚Рѕ РїСЂРµР±С‹РІР°РЅРёСЏ)</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="Born" type="fssp:DDateType" minOccurs="0">
+      <xs:annotation>
+       <xs:documentation>РґР°С‚Р° СЂРѕР¶РґРµРЅРёСЏ</xs:documentation>
+       <xs:documentation>РґР°С‚Р° СЂРѕР¶РґРµРЅРёСЏ Р»РёС†Р°. Р РµРєРІРёР·РёС‚ РѕР±СЏР·Р°С‚РµР»РµРЅ РґР»СЏ Р·Р°РїРѕР»РЅРµРЅРёСЏ, РµСЃР»Рё Р·РЅР°С‡РµРЅРёРµ СЂРµРєРІРёР·РёС‚Р° В«С‚РёРї Р»РёС†Р° РёР»Рё РѕСЂРіР°РЅРёР·Р°С†РёРёВ» СЂР°РІРЅРѕ Р·РЅР°С‡РµРЅРёСЋ В«2В»</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="Bornadr" type="fssp:DAddrType" minOccurs="0">
+      <xs:annotation>
+       <xs:documentation>РјРµСЃС‚Рѕ СЂРѕР¶РґРµРЅРёСЏ</xs:documentation>
+       <xs:documentation>РјРµСЃС‚Рѕ СЂРѕР¶РґРµРЅРёСЏ Р»РёС†Р°. Р РµРєРІРёР·РёС‚ Р·Р°РїРѕР»РЅСЏРµС‚СЃСЏ, РµСЃР»Рё Р·РЅР°С‡РµРЅРёРµ СЂРµРєРІРёР·РёС‚Р° В«С‚РёРї Р»РёС†Р° РёР»Рё РѕСЂРіР°РЅРёР·Р°С†РёРёВ» СЂР°РІРЅРѕ Р·РЅР°С‡РµРЅРёСЋ В«2В» </xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="Inn" type="fssp:DInnType" minOccurs="0">
+      <xs:annotation>
+       <xs:documentation>РРќРќ</xs:documentation>
+       <xs:documentation>РРќРќ (РљРРћ) РѕСЂРіР°РЅРёР·Р°С†РёРё РёР»Рё Р»РёС†Р°. Р РµРєРІРёР·РёС‚ РѕР±СЏР·Р°С‚РµР»РµРЅ РґР»СЏ Р·Р°РїРѕР»РЅРµРЅРёСЏ, РµСЃР»Рё Р·РЅР°С‡РµРЅРёРµ СЂРµРєРІРёР·РёС‚Р° В«С‚РёРї Р»РёС†Р° РёР»Рё РѕСЂРіР°РЅРёР·Р°С†РёРёВ» СЂР°РІРЅРѕ Р·РЅР°С‡РµРЅРёСЋ В«1В»</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="Kpp" type="fssp:DKppType" minOccurs="0">
+      <xs:annotation>
+       <xs:documentation>РљРџРџ</xs:documentation>
+       <xs:documentation>РљРџРџ РѕСЂРіР°РЅРёР·Р°С†РёРё РёР»Рё Р»РёС†Р°. Р РµРєРІРёР·РёС‚ Р·Р°РїРѕР»РЅСЏРµС‚СЃСЏ, РµСЃР»Рё Р·РЅР°С‡РµРЅРёРµ СЂРµРєРІРёР·РёС‚Р° В«С‚РёРї Р»РёС†Р° РёР»Рё РѕСЂРіР°РЅРёР·Р°С†РёРёВ» СЂР°РІРЅРѕ Р·РЅР°С‡РµРЅРёСЋ В«1В»</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="Ogrn" type="fssp:DOgrnType" minOccurs="0">
+      <xs:annotation>
+       <xs:documentation>РћР“Р Рќ</xs:documentation>
+       <xs:documentation>РћР“Р Рќ РѕСЂРіР°РЅРёР·Р°С†РёРё РёР»Рё Р»РёС†Р°. Р РµРєРІРёР·РёС‚ Р·Р°РїРѕР»РЅСЏРµС‚СЃСЏ, РµСЃР»Рё Р·РЅР°С‡РµРЅРёРµ СЂРµРєРІРёР·РёС‚Р° В«С‚РёРї Р»РёС†Р° РёР»Рё РѕСЂРіР°РЅРёР·Р°С†РёРёВ» СЂР°РІРЅРѕ Р·РЅР°С‡РµРЅРёСЋ В«1В»</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="SNILS" type="fssp:DSnilsType" minOccurs="0">
+      <xs:annotation>
+       <xs:documentation>РЎРќРР›РЎ</xs:documentation>
+       <xs:documentation>РЎРќРР›РЎ Р»РёС†Р°</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="TypeDocCode" type="fssp:DPersonDocumentTypeType" minOccurs="0">
+      <xs:annotation>
+       <xs:documentation>РєРѕРґ С‚РёРїР° РґРѕРєСѓРјРµРЅС‚Р°</xs:documentation>
+       <xs:documentation>РєРѕРґ РІРёРґР° РґРѕРєСѓРјРµРЅС‚Р°, СѓРґРѕСЃС‚РѕРІРµСЂСЏСЋС‰РµРіРѕ Р»РёС‡РЅРѕСЃС‚СЊ  С„РёР·РёС‡РµСЃРєРѕРіРѕ Р»РёС†Р°</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="SerDoc" type="fssp:DVarchar25Type" minOccurs="0">
+      <xs:annotation>
+       <xs:documentation>СЃРµСЂРёСЏ РґРѕРєСѓРјРµРЅС‚Р°</xs:documentation>
+       <xs:documentation>СЃРµСЂРёСЏ РґРѕРєСѓРјРµРЅС‚Р°, СѓРґРѕСЃС‚РѕРІРµСЂСЏСЋС‰РµРіРѕ Р»РёС‡РЅРѕСЃС‚СЊ С„РёР·РёС‡РµСЃРєРѕРіРѕ Р»РёС†Р°</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="NumDoc" type="fssp:DVarchar25Type" minOccurs="0">
+      <xs:annotation>
+       <xs:documentation>РЅРѕРјРµСЂ РґРѕРєСѓРјРµРЅС‚Р°</xs:documentation>
+       <xs:documentation>РЅРѕРјРµСЂ РґРѕРєСѓРјРµРЅС‚Р°, СѓРґРѕСЃС‚РѕРІРµСЂСЏСЋС‰РµРіРѕ Р»РёС‡РЅРѕСЃС‚СЊ С„РёР·РёС‡РµСЃРєРѕРіРѕ Р»РёС†Р°</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="Gender" type="fssp:DGenderType" minOccurs="0">
+      <xs:annotation>
+       <xs:documentation>РїРѕР»</xs:documentation>
+       <xs:documentation>РїРѕР»</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="CountryCode" type="fssp:DOKCMType" minOccurs="0">
+      <xs:annotation>
+       <xs:documentation>РіСЂР°Р¶РґР°РЅСЃС‚РІРѕ</xs:documentation>
+       <xs:documentation>РіСЂР°Р¶РґР°РЅСЃС‚РІРѕ</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="NameOld" type="fssp:DDescriptionType" minOccurs="0">
+      <xs:annotation>
+       <xs:documentation>Р¤.Р.Рћ. РґРѕ СЃРјРµРЅС‹ С„Р°РјРёР»РёРё</xs:documentation>
+       <xs:documentation>Р¤.Р.Рћ. РґРѕ РїРµСЂРµРјРµРЅС‹ С„Р°РјРёР»РёРё (РµСЃР»Рё Р±С‹Р» С„Р°РєС‚ СЃРјРµРЅС‹ С„Р°РјРёР»РёРё) </xs:documentation>
+      </xs:annotation>
+     </xs:element>
+    </xs:sequence>
+   </xs:extension>
+  </xs:complexContent>
+ </xs:complexType>
+ <xs:element name="РЎreditHistory" type="fssp:РЎreditHistoryType" substitutionGroup="fssp:Object"/>
+ <xs:complexType name="РЎreditHistoryType">
+  <xs:annotation>
+   <xs:documentation>РћР±СЏР·Р°С‚РµР»СЊСЃС‚РІР° СЃСѓР±СЉРµРєС‚Р° РєСЂРµРґРёС‚РЅРѕР№ РёСЃС‚РѕСЂРёРё</xs:documentation>
+  </xs:annotation>
+  <xs:complexContent>
+   <xs:extension base="fssp:ObjectType">
+    <xs:sequence>
+     <xs:element name="LiabilitySum" type="fssp:DMoneyType" minOccurs="1">
+      <xs:annotation>
+       <xs:documentation>СЃСѓРјРјР° РѕР±СЏР·Р°С‚РµР»СЊСЃС‚РІ РїРѕ Р·Р°Р№РјСѓ</xs:documentation>
+       <xs:documentation>СЃСѓРјРјР° РѕР±СЏР·Р°С‚РµР»СЊСЃС‚РІ (РёР»Рё РїСЂРµРґРµР»СЊРЅРѕРіРѕ Р»РёРјРёС‚Р° РїРѕ РєСЂРµРґРёС‚Сѓ, РїСЂРµРґРѕСЃС‚Р°РІР»РµРЅРЅРѕРјСѓ СЃ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёРµРј Р±Р°РЅРєРѕРІСЃРєРѕР№ РєР°СЂС‚С‹) Р·Р°РµРјС‰РёРєР° РЅР° РґР°С‚Сѓ Р·Р°РєР»СЋС‡РµРЅРёСЏ  РґРѕРіРѕРІРѕСЂР° Р·Р°Р№РјР° (РєСЂРµРґРёС‚Р°)</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="LiabilityEndPlanDate" type="fssp:DDateType" minOccurs="0">
+      <xs:annotation>
+       <xs:documentation>РґР°С‚Р° РёСЃРїРѕР»РЅРµРЅРёСЏ</xs:documentation>
+       <xs:documentation>СЃСЂРѕРє РёСЃРїРѕР»РЅРµРЅРёСЏ РѕР±СЏР·Р°С‚РµР»СЊСЃС‚РІР° Р·Р°РµРјС‰РёРєР° РІ РїРѕР»РЅРѕРј СЂР°Р·РјРµСЂРµ РІ СЃРѕРѕС‚РІРµС‚СЃРІРёРё СЃ РґРѕРіРѕРІРѕСЂРѕРј Р·Р°Р№РјР° (РєСЂРµРґРёС‚Р°). Р РµРєРІРёР·РёС‚ РѕР±СЏР·Р°С‚РµР»РµРЅ РґР»СЏ Р·Р°РїРѕР»РЅРµРЅРёСЏ, РІ СЃР»СѓС‡Р°Рµ РµСЃР»Рё РєСЂРµРґРёС‚ РёРјРµРµС‚ РєРѕРЅРµС‡РЅС‹Р№ СЃСЂРѕРє</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="RateDate" type="fssp:DDateType" minOccurs="1">
+      <xs:annotation>
+       <xs:documentation>СЃСЂРѕРє СѓРїР»Р°С‚С‹ РїСЂРѕС†РµРЅС‚РѕРІ</xs:documentation>
+       <xs:documentation>СЃСЂРѕРє СѓРїР»Р°С‚С‹ РїСЂРѕС†РµРЅС‚РѕРІ РІ СЃРѕРѕС‚РІРµС‚СЃРІРёРё СЃ РґРѕРіРѕРІРѕСЂРѕРј Р·Р°Р№РјР° (РєСЂРµРґРёС‚Р°)</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="AdditionalInfo" type="fssp:DDescriptionType" minOccurs="0">
+      <xs:annotation>
+       <xs:documentation>РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅР°СЏ РёРЅС„РѕСЂРјР°С†РёСЏ</xs:documentation>
+       <xs:documentation>РёР·РјРµРЅРµРЅРёСЏ Рё (РёР»Рё) РґРѕРїРѕР»РЅРµРЅРёСЏ Рє РґРѕРіРѕРІРѕСЂСѓ Р·Р°Р№РјР° (РєСЂРµРґРёС‚Р°), РІ С‚.С‡. РєР°СЃР°СЋС‰РёС…СЃСЏ СЃСЂРѕРєРѕРІ РёСЃРїРѕР»РЅРµРЅРёСЏ РѕР±СЏР·Р°С‚РµР»СЊСЃС‚РІ</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="LiabilityEndFactDate" type="fssp:DDateType" minOccurs="0">
+      <xs:annotation>
+       <xs:documentation>РґР°С‚Р° С„Р°РєС‚РёС‡РµСЃРєРѕРіРѕ  РїРѕР»РЅРѕРіРѕ РёСЃРїРѕР»РЅРµРЅРёСЏ</xs:documentation>
+       <xs:documentation>РґР°С‚Р° С„Р°РєС‚РёС‡РµСЃРєРѕРіРѕ РёСЃРїРѕР»РЅРµРЅРёСЏ РѕР±СЏР·Р°С‚РµР»СЊСЃС‚РІ Р·Р°РµРјС‰РёРєР° РІ РїРѕР»РЅРѕРј СЂР°Р·РјРµСЂРµ</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="LiabilityEndFactSum" type="fssp:DMoneyType" minOccurs="0">
+      <xs:annotation>
+       <xs:documentation>СЃСѓРјРјР° С„Р°РєС‚РёС‡РµСЃРєРѕРіРѕ РїРѕР»РЅРѕРіРѕ РёСЃРїРѕР»РЅРµРЅРёСЏ</xs:documentation>
+       <xs:documentation>СЃСѓРјРјР° С„Р°РєС‚РёС‡РµСЃРєРѕРіРѕ РёСЃРїРѕР»РЅРµРЅРёСЏ РѕР±СЏР·Р°С‚РµР»СЊСЃС‚РІ Р·Р°РµРјС‰РёРєР° РІ РїРѕР»РЅРѕРј СЂР°Р·РјРµСЂРµ</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="LiabilityEndMiddleDate" type="fssp:DDateType" minOccurs="0">
+      <xs:annotation>
+       <xs:documentation>РґР°С‚Р° С„Р°РєС‚РёС‡РµСЃРєРѕРіРѕ  РЅРµРїРѕР»РЅРѕРіРѕ РёСЃРїРѕР»РЅРµРЅРёСЏ</xs:documentation>
+       <xs:documentation>РґР°С‚Р° С„Р°РєС‚РёС‡РµСЃРєРѕРіРѕ РёСЃРїРѕР»РЅРµРЅРёСЏ РѕР±СЏР·Р°С‚РµР»СЊСЃС‚РІ Р·Р°РµРјС‰РёРєР° РІ РЅРµРїРѕР»РЅРѕРј СЂР°Р·РјРµСЂРµ</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="LiabilityEndMiddleSum" type="fssp:DMoneyType" minOccurs="0">
+      <xs:annotation>
+       <xs:documentation>СЃСѓРјРјР° С„Р°РєС‚РёС‡РµСЃРєРѕРіРѕ РЅРµРїРѕР»РЅРѕРіРѕ РёСЃРїРѕР»РЅРµРЅРёСЏ</xs:documentation>
+       <xs:documentation>СЃСѓРјРјР° С„Р°РєС‚РёС‡РµСЃРєРѕРіРѕ РёСЃРїРѕР»РЅРµРЅРёСЏ РѕР±СЏР·Р°С‚РµР»СЊСЃС‚РІ Р·Р°РµРјС‰РёРєР° РІ РЅРµРїРѕР»РЅРѕРј СЂР°Р·РјРµСЂРµ</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="DebtSum" type="fssp:DMoneyType" minOccurs="0">
+      <xs:annotation>
+       <xs:documentation>СЃСѓРјРјР° Р·Р°РґРѕР»Р¶РµРЅРЅРѕСЃС‚Рё</xs:documentation>
+       <xs:documentation>СЃСѓРјРјР° Р·Р°РґРѕР»Р¶РµРЅРЅРѕСЃС‚Рё РїРѕ РґРѕРіРѕРІРѕСЂСѓ Р·Р°Р№РјР° (РєСЂРµРґРёС‚Р°) РЅР° РґР°С‚Сѓ РїРѕСЃР»РµРґРЅРµРіРѕ РїР»Р°С‚РµР¶Р°. Р РµРєРІРёР·РёС‚ РѕР±СЏР·Р°С‚РµР»РµРЅ РґР»СЏ Р·Р°РїРѕР»РЅРµРЅРёСЏ, РµСЃР»Рё СЂРµРєРІРёР·РёС‚ В«СЃСѓРјРјР° С„Р°РєС‚РёС‡РµСЃРєРѕРіРѕ РїРѕР»РЅРѕРіРѕ РёСЃРїРѕР»РЅРµРЅРёСЏВ» РЅРµ Р·Р°РїРѕР»РЅРµРЅ</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="Guarantee" type="fssp:DVarchar300Type" minOccurs="0">
+      <xs:annotation>
+       <xs:documentation>РїРѕРіР°С€РµРЅРёРµ Р·Р°Р№РјР° Р·Р° СЃС‡РµС‚ РѕР±РµСЃРїРµС‡РµРЅРёСЏ</xs:documentation>
+       <xs:documentation>РїРѕРіР°С€РµРЅРёРµ Р·Р°Р№РјР° Р·Р° СЃС‡РµС‚ РѕР±РµСЃРїРµС‡РµРЅРёСЏ РІ СЃР»СѓС‡Р°Рµ РЅРµРёСЃРїРѕР»РЅРµРЅРёСЏ Р·Р°РµРјС‰РёРєРѕРј СЃРІРѕРёС… РѕР±СЏР·Р°С‚РµР»СЊСЃС‚РІ РїРѕ РґРѕРіРѕРІРѕСЂСѓ</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="CourtInfo" type="fssp:DVarchar3000Type" minOccurs="0">
+      <xs:annotation>
+       <xs:documentation>СЃСѓРґРµР±РЅС‹Рµ СЂРµС€РµРЅРёСЏ</xs:documentation>
+       <xs:documentation>РёРЅС„РѕСЂРјР°С†РёСЏ Рѕ СЂР°СЃСЃРјРѕС‚СЂРµРЅРёРё СЃСѓРґРѕРј СЃРїРѕСЂРѕРІ РїРѕ РґРѕРіРѕРІРѕСЂСѓ Р·Р°Р№РјР° Рё СЃРѕРґРµСЂР¶Р°РЅРёРµ СЂРµР·РѕР»СЋС‚РёРІРЅС‹С… С‡Р°СЃС‚РµР№ СЃСѓРґРµР±РЅС‹С… Р°РєС‚РѕРІ, РІСЃС‚СѓРїРёРІС€РёС… РІ Р·Р°РєРѕРЅРЅСѓСЋ СЃРёР»Сѓ, Р·Р° РёСЃРєР»СЋС‡РµРЅРёРµРј РёРЅС„РѕСЂРјР°С†РёРё, РІС…РѕРґСЏС‰РµР№ РІ РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅСѓСЋ (Р·Р°РєСЂС‹С‚СѓСЋ) С‡Р°СЃС‚СЊ РєСЂРµРґРёС‚РЅРѕР№ РёСЃС‚РѕСЂРёРё</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="DateEnd" type="fssp:DDateType" minOccurs="0">
+      <xs:annotation>
+       <xs:documentation>РґР°С‚Р° РїСЂРµРєСЂР°С‰РµРЅРёСЏ РїРµСЂРµРґР°С‡Рё РёРЅС„РѕСЂРјР°С†РёРё</xs:documentation>
+       <xs:documentation>РґР°С‚Р° РїСЂРµРєСЂР°С‰РµРЅРёСЏ РїРµСЂРµРґР°С‡Рё РёРЅС„РѕСЂРјР°С†РёРё, РѕРїСЂРµРґРµР»РµРЅРЅРѕР№ СЃС‚. 4 Р¤Р—-218, РІ Р±СЋСЂРѕ РєСЂРµРґРёС‚РЅС‹Р№ РёСЃС‚РѕСЂРёР№ РІ СЃРІСЏР·Рё СЃ РїСЂРµРєСЂР°С‰РµРЅРёРµРј РґРµР№СЃС‚РІРёСЏ РґРѕРіРѕРІРѕСЂР° РѕР± РѕРєР°Р·Р°РЅРёРё РёРЅС„РѕСЂРјР°С†РёРѕРЅРЅС‹С… СѓСЃР»СѓРі</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="DateAssignment" type="fssp:DDateType" minOccurs="0">
+      <xs:annotation>
+       <xs:documentation>РґР°С‚Р° СѓСЃС‚СѓРїРєРё РїСЂР°РІ С‚СЂРµР±РѕРІР°РЅРёСЏ</xs:documentation>
+       <xs:documentation>РґР°С‚Р° СѓСЃС‚СѓРїРєРё РїСЂР°РІ С‚СЂРµР±РѕРІР°РЅРёСЏ</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="DeloDate" type="fssp:DDateType" minOccurs="0">
+      <xs:annotation>
+       <xs:documentation>РґР°С‚Р° РІСЃС‚СѓРїР»РµРЅРёСЏ СЂРµС€РµРЅРёСЏ СЃСѓРґР° Рѕ РІР·С‹СЃРєР°РЅРёРё СЃСѓРјРј</xs:documentation>
+       <xs:documentation>РґР°С‚Р° РІСЃС‚СѓРїР»РµРЅРёСЏ СЂРµС€РµРЅРёСЏ СЃСѓРґР° Рѕ РІР·С‹СЃРєР°РЅРёРё СЃСѓРјРј</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="ResolutionText" type="fssp:DVarchar3000Type" minOccurs="0">
+      <xs:annotation>
+       <xs:documentation>СЂРµР·РѕР»СЋС‚РёРІРЅР°СЏ С‡Р°СЃС‚СЊ СЃСѓРґРµР±РЅРѕРіРѕ СЂРµС€РµРЅРёСЏ</xs:documentation>
+       <xs:documentation>СЂРµР·РѕР»СЋС‚РёРІРЅР°СЏ С‡Р°СЃС‚СЊ СЃСѓРґРµР±РЅРѕРіРѕ СЂРµС€РµРЅРёСЏ Рѕ РІР·С‹СЃРєР°РЅРёРё СЃСѓРјРј</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="CreditType" type="fssp:DVarchar1Type" minOccurs="0">
+      <xs:annotation>
+       <xs:documentation>РІРёРґ РѕР±СЏР·Р°С‚РµР»СЊСЃС‚РІР°</xs:documentation>
+       <xs:documentation>РІРёРґ РѕР±СЏР·Р°С‚РµР»СЊСЃС‚РІР°: 1 вЂ” РґРѕРіРѕРІРѕСЂ Р·Р°Р№РјР° (РєСЂРµРґРёС‚Р°), 2 вЂ” РґРѕРіРѕРІРѕСЂ РїРѕСЂСѓС‡РёС‚РµР»СЊСЃС‚РІР°,  3 вЂ” Р±Р°РЅРєРѕРІСЃРєР°СЏ РіР°СЂР°РЅС‚РёСЏ</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element ref="fssp:Property" minOccurs="0" maxOccurs="unbounded">
+      <xs:annotation>
+       <xs:documentation>СЃРІРµРґРµРЅРёСЏ Рѕ РїСЂРµРґРјРµС‚Рµ Р·Р°Р»РѕРіР°</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+    </xs:sequence>
+   </xs:extension>
+  </xs:complexContent>
+ </xs:complexType>
+ <xs:element name="Property" type="fssp:PropertyType" substitutionGroup="fssp:Object"/>
+ <xs:complexType name="PropertyType">
+  <xs:annotation>
+   <xs:documentation>РЎРІРµРґРµРЅРёСЏ Рѕ РїСЂРµРґРјРµС‚Рµ Р·Р°Р»РѕРіР°</xs:documentation>
+  </xs:annotation>
+  <xs:complexContent>
+   <xs:extension base="fssp:ObjectType">
+    <xs:sequence>
+     <xs:element name="Description" type="fssp:DVarchar300Type" minOccurs="1">
+      <xs:annotation>
+       <xs:documentation>РѕРїРёСЃР°РЅРёРµ</xs:documentation>
+       <xs:documentation>РѕРїРёСЃР°РЅРёРµ РїСЂРµРґРјРµС‚Р° Р·Р°Р»РѕРіР°</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="Sum" type="fssp:DMoneyType" minOccurs="1">
+      <xs:annotation>
+       <xs:documentation>СЃСѓРјРјР°</xs:documentation>
+       <xs:documentation>РѕС†РµРЅРєР° РїСЂРµРґРјРµС‚Р° Р·Р°Р»РѕРіР° РёР»Рё СЃСѓРјРјР° РїРѕСЂСѓС‡РёС‚РµР»СЊСЃС‚РІР° РёР»Рё Р±Р°РЅРєРѕРІСЃРєРѕР№ РіР°СЂР°РЅС‚РёРё</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+     <xs:element name="Date" type="fssp:DDateType" minOccurs="1">
+      <xs:annotation>
+       <xs:documentation>РґР°С‚Р°</xs:documentation>
+       <xs:documentation>РґР°С‚Р° РїСЂРѕРІРµРґРµРЅРёСЏ РѕС†РµРЅРєРё, СЃСЂРѕРє РїРѕСЂСѓС‡РёС‚РµР»СЊСЃС‚РІР° РёР»Рё Р±Р°РЅРєРѕРІСЃРєРѕР№ РіР°СЂР°РЅС‚РёРё</xs:documentation>
+      </xs:annotation>
+     </xs:element>
+    </xs:sequence>
+   </xs:extension>
+  </xs:complexContent>
+ </xs:complexType>
+ <xs:element name="Object" type="fssp:ObjectType" abstract="true"/>
+ <xs:complexType name="ObjectType">
+  <xs:annotation>
+   <xs:documentation>Р‘Р°Р·РѕРІС‹Р№ РєР»Р°СЃСЃ РґР»СЏ РІСЃРµС… РґРѕРєСѓРјРµРЅС‚РѕРІ</xs:documentation>
+  </xs:annotation>
+ </xs:complexType>
+</xs:schema>

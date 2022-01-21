@@ -3,6 +3,8 @@ import codecs
 import configparser
 import filecmp
 import ast
+import sys
+
 import zip_unicode
 import os
 import tempfile
@@ -42,6 +44,7 @@ import datetime
 from smtplib import SMTPDataError
 import shutil
 import docx
+import logging
 """
 from selenium.webdriver import ActionChains
 
@@ -53,6 +56,11 @@ ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 chromedriver = ROOT_DIR + r"\chromedriver"
 files_to_send = []
 info_comp = []
+Log_Format = "%(levelname)s %(asctime)s - %(message)s"
+logging.basicConfig(filename='logfile.log', filemode='a', format=Log_Format, level = logging.INFO)
+logger = logging.getLogger()
+handler = logging.FileHandler('logfile.log')
+logger.addHandler(handler)
 
 class web:
 
@@ -61,9 +69,14 @@ class web:
         self.preferences = ''
         self.set_preferencies()
         self.set_options()
-        self.browser = webdriver.Chrome(executable_path=chromedriver, options=self.options)
-        self.msg = MIMEMultipart()
         self.link = link
+        try:
+            self.browser = webdriver.Chrome(executable_path=chromedriver, options=self.options)
+        except:
+            logger.error("Необходимо обновить версию ChromeDriver. " + str(datetime.datetime.now()))
+            logger.info("Аварийное отключение программы. " + str(datetime.datetime.now()))
+            sys.exit()
+        self.msg = MIMEMultipart()
         self.connection(link)
         self.filter = False
         self.filter_word = ''
@@ -85,24 +98,24 @@ class web:
                             "safebrowsing.enabled": "false"}
 
     def close_connection(self):
-        print('Отключение от сайта ' + self.link)
+        logger.info('Отключение от сайта ' + self.link + ' ' + str(datetime.datetime.now()))
         try:
             self.browser.close()
-            print('Отключение прошло успешно.')
+            logger.info('Отключение прошло успешно. ' + str(datetime.datetime.now()))
         except WebDriverException:
-            print('Произошла ошибка при отключении от сайта ', self.link)
+            logger.exception('Произошла ошибка при отключении от сайта ' + self.link + ' ' + str(datetime.datetime.now()))
     def get_html_text(self):
         return self.browser.page_source
 
     def connection(self, link):
-        print("Подключение к сайту " + link + "...")
+        logger.info("Подключение к сайту " + link + " " + str(datetime.datetime.now()))
         try:
             self.browser.get(link)
             time.sleep(1)
-            print("Подключение прошло успешно")
+            logger.info("Подключение прошло успешно" + str(datetime.datetime.now()))
             return self.browser.page_source
         except WebDriverException:
-            print("Возникла ошибка при подключении к сайту ", self.link)
+            logger.exception("Возникла ошибка при подключении к сайту " + self.link + ' ' + str(datetime.datetime.now()))
             return ''
 
     def __del__(self):
@@ -330,7 +343,7 @@ def comparing():
                                 try:
                                     info_comp.append('В файле ' + filename + ' присутствуют изменения, которые записаны в файл ' + ntpath.basename(compare_docs(change_name(filename), change_name(dir_file), str(ROOT_DIR) + r"\downloads\\" , str(ROOT_DIR) + r"\downloads\\")) + '\n')
                                 except:
-                                    print("Возникла ошибка при работе с файлами ", filename, ' и ', dir_file)
+                                    logger.exception("Возникла ошибка при работе с файлами " + filename + ' и ' + dir_file + ' ' + str(datetime.datetime.now()))
                 files_in_dir.append(filename)
 
 
@@ -373,11 +386,15 @@ def get_content(html):
         while True:
             xpath = '/html/body/div/div/div/div/div[1]/div/div[1]/div[2]/ul/li[i]/a'
             xpath = xpath.replace('[i]', '[' + str(i) + ']')
+            ext = False
+            if (len(html.browser.find_elements_by_xpath(xpath)) == 0) & (i == 2):
+                ext = True
             try:
-                wait = WebDriverWait(html.browser, 10, poll_frequency=1, ignored_exceptions=[NoSuchElementException, StaleElementReferenceException])
-                element = wait.until(EC.element_to_be_clickable((By.XPATH, xpath)))
-                if (element.text == ''): break
-                element.click()
+                if ext is False:
+                    wait = WebDriverWait(html.browser, 10, poll_frequency=1, ignored_exceptions=[NoSuchElementException, StaleElementReferenceException])
+                    element = wait.until(EC.element_to_be_clickable((By.XPATH, xpath)))
+                    if (element.text == ''): break
+                    element.click()
                 soup = BeautifulSoup(html.get_html_text(), "lxml")
                 items = soup.find_all("div", {"class": "panel panel-news"})
                 for item in items:
@@ -408,9 +425,11 @@ def get_content(html):
                         news_body = (str(news_body) + ''.join(map(str, main_news))).replace('\n', '')
                         if check_news(news_body) is True:
                             news.append(name + ' ' + main_news)
+                if ext is True: break
             except (NoSuchElementException, ElementClickInterceptedException, TimeoutException):
                 break
             i += 1
+            print(news)
             time.sleep(0.1)
     if html.link == 'https://dom.gosuslugi.ru/#!/regulations':
         i = 1
@@ -517,9 +536,9 @@ def send_email(news, toaddr, subject, msg_type, sender, passw):
                 msg.attach(attach)
     try:
         server.sendmail(email_str, toaddr, msg.as_string())
-        print("Сообщение успешно отправлено")
+        logger.info("Сообщение успешно отправлено")
     except (SMTPDataError):
-        print("Сообщение не доставлено, проверьте работоспособность исходящего адреса.")
+        logger.exception("Сообщение не доставлено, проверьте работоспособность исходящего адреса.")
     server.quit()
 
 def end_delete():
@@ -568,6 +587,7 @@ def init_delete():
                 os.remove(str(ROOT_DIR) + r"\downloads\\" + filename)
 
 def newparser():
+    logger.info("Программа запущена. " + str(datetime.datetime.now()))
     init_delete()
     config = configparser.ConfigParser()
     try:
@@ -585,6 +605,7 @@ def newparser():
         mail_subject = ""
         send_addr = ''
         send_password = ''
+        logger.exception("Не удалось считать данный из конфигурационного файла. " + str(datetime.datetime.now()))
     for link in my_list:
         smev3_news = []
         send_news = False
@@ -600,13 +621,10 @@ def newparser():
             with codecs.open('config.ini', 'w', 'UTF-8') as configfile:
                 config.write(configfile)
             if config["filter"]["filter_on"] == '"Yes"':
-                print("На данный момент доступны следующие фильтры для сайта https://smev3.gosuslugi.ru/portal/news.jsp: ")
-                for theme in themes:
-                    print('-- ' + str(theme))
                 html.filter = True
                 html.filter_word = config["filter"]["theme"]
                 if check_theme(html.filter_word, themes) == False:
-                    print("Тема фильтрации не обнаружена, отбор новостей осуществить не удалось")
+                    logger.info("Тема фильтрации не обнаружена, отбор новостей осуществить не удалось")
                     del html
                     continue
         else:
@@ -617,7 +635,7 @@ def newparser():
                 for mail in dest_mails:
                     send_email(smev3_news, mail, mail_subject, "news", send_addr, send_password)
             else:
-                print("На странице ", link, " новых новостей не обнаружено.")
+                logger.info("На странице " + link + " новых новостей не обнаружено. " + str(datetime.datetime.now()))
         del html
         time.sleep(0.1)
     comparing()
@@ -625,6 +643,7 @@ def newparser():
         for mail in dest_mails:
             send_email(make_html_text(info_comp), mail, mail_subject, "comparing", send_addr, send_password)
     else:
-        print("Новых версий файлов не обнаружено.")
+        logger.info("Новых версий файлов не обнаружено." + str(datetime.datetime.now()))
     end_delete()
+    logger.info("Программа выполнена. " + str(datetime.datetime.now()) + '\n')
 newparser()
