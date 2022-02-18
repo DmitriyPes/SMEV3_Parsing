@@ -4,7 +4,7 @@ import configparser
 import filecmp
 import ast
 import sys
-
+import hashlib
 import zip_unicode
 import os
 import tempfile
@@ -56,6 +56,8 @@ ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 chromedriver = ROOT_DIR + r"\chromedriver"
 files_to_send = []
 info_comp = []
+pr_info_comp = []
+test_info_comp = []
 Log_Format = "%(levelname)s %(asctime)s - %(message)s"
 logging.basicConfig(filename='logfile.log', filemode='a', format=Log_Format, level = logging.INFO)
 logger = logging.getLogger()
@@ -80,16 +82,23 @@ class web:
         self.connection(link)
         self.filter = False
         self.filter_word = ''
+        self.test_seg = ""
+        self.pr_seg = ""
+        self.dest_mails = []
+        self.mail_subject = ""
+        self.send_addr = ''
+        self.send_password = ''
+        self.vs_name = ''
 
     def set_options(self):
-        #self.options.add_argument('headless')
+        self.options.add_argument('headless')
         self.options.add_argument("--start-maximized")
         self.options.add_experimental_option("prefs", self.preferences)
         self.options.add_experimental_option('prefs', {
             "download.default_directory": str(ROOT_DIR) + r"\downloads",
             "download.directory_upgrade": True,
-            "download.prompt_for_download": False,  # To auto download the file
-            "plugins.always_open_pdf_externally": True  # It will not show PDF directly in chrome
+            "download.prompt_for_download": False,
+            "plugins.always_open_pdf_externally": True
         })
         self.options.add_experimental_option('excludeSwitches', ['enable-logging'])
 
@@ -112,7 +121,7 @@ class web:
         try:
             self.browser.get(link)
             time.sleep(1)
-            logger.info("Подключение прошло успешно" + str(datetime.datetime.now()))
+            logger.info("Подключение прошло успешно. " + str(datetime.datetime.now()))
             return self.browser.page_source
         except WebDriverException:
             logger.exception("Возникла ошибка при подключении к сайту " + self.link + ' ' + str(datetime.datetime.now()))
@@ -127,9 +136,8 @@ def excel_connect(path):
     pandas.set_option('display.max_columns', None)
     pandas.set_option('display.max_colwidth', None)
 
-    vs_info = pandas.read_excel(path, index_col=None, na_values=['NA'], usecols="F,E")
-    vs_info_dict = vs_info.set_index('Код').to_dict()
-    vs_info_dict = vs_info_dict['Название Сервиса(ВС) в СМЭВ']
+    vs_info = pandas.read_excel(path, index_col=None, na_values=['NA'], usecols="F,E,H,I")
+    vs_info_dict = vs_info.to_dict('list')
     return vs_info_dict
 
 
@@ -149,8 +157,16 @@ def get_themes(html):
     while True:
         xpath = '/html/body/div/div/div/div/div[1]/div/div[1]/div[2]/ul/li[i]/a'
         xpath = xpath.replace('[i]', '[' + str(i) + ']')
+        ext = False
+        if (len(html.browser.find_elements_by_xpath(xpath)) == 0) & (i == 2):
+            ext = True
         try:
-            html.browser.find_element_by_xpath(xpath).click()
+            if ext is False:
+                wait = WebDriverWait(html.browser, 10, poll_frequency=1,
+                                     ignored_exceptions=[NoSuchElementException, StaleElementReferenceException])
+                element = wait.until(EC.element_to_be_clickable((By.XPATH, xpath)))
+                if (element.text == ''): break
+                element.click()
             soup = BeautifulSoup(html.get_html_text(), "lxml")
             items = soup.find_all("div", {"class": "news-category"})
             check = False
@@ -159,14 +175,17 @@ def get_themes(html):
                     if theme == item.get_text():
                         check = True
                         break
-                if check == False:
+                if check is False:
                     themes.append(item.get_text())
                 else:
                     check = False
-        except (NoSuchElementException, ElementClickInterceptedException):
-            return themes
+            if ext is True:
+               break
+        except (NoSuchElementException, ElementClickInterceptedException, TimeoutException):
+            break
         i += 1
         time.sleep(0.1)
+    return themes
 
 
 def check_file(file_name):
@@ -176,8 +195,28 @@ def check_file(file_name):
         continue
     return False
 
+def rename_last_downloaded_zip(end_let):
+    paths = sorted(Path(str(ROOT_DIR) + r"\downloads\\").iterdir(), key=lambda f: f.stat().st_mtime)
+    filename = paths[len(paths)-1]
+    try:
+        if str(filename).endswith('.docx'):
+            os.rename(filename, str(filename).replace('.docx', str(end_let).replace('.zip', '.docx')))
+        if str(filename).endswith('.zip'):
+            os.rename(filename, str(filename).replace('.zip', end_let))
+    except FileExistsError:
+        os.remove(filename)
 
-def open_tab(html, link, need_name):
+def get_last_downloaded_file():
+    paths = sorted(Path(str(ROOT_DIR) + r"\downloads\\").iterdir(), key=lambda f: f.stat().st_mtime)
+    filename = paths[len(paths) - 1]
+    return filename
+
+def remain_2_last(path):
+    paths = sorted(Path(path).iterdir(), key=lambda f: f.stat().st_mtime)
+    for path in paths[:(len(paths)-2)]:
+        os.remove(path)
+
+def open_tab(html, link, mode):
     try:
         html.browser.execute_script("window.open();")
         main_window = html.browser.current_window_handle
@@ -186,14 +225,117 @@ def open_tab(html, link, need_name):
         time.sleep(0.1)
     except:
         main_window = ''
-    if need_name is True:
+    if mode == 'Name':
         name = get_newsname(html)
+    end_let = ''
+    if mode == 'TestS':
+        end_let = '_test_seg.zip'
+    if mode == 'Product':
+        end_let = '_productive_seg.zip'
+    if end_let != '':
+        time.sleep(0.1)
+        """
+        web_file = BeautifulSoup(html.browser.find_element_by_xpath('/html/body/div/div/div/div/div/div/div/div/table/tbody/tr[10]/td[1]/button').get_attribute('onclick'), 'lxml')
+        try:
+            found = re.search("files/(.+?)'", str(web_file.find('p'))).group(1)
+        except AttributeError:
+            found = ''
+        print(found)
+        """
+        download_by_xpath(html, '//*[@id="infotable"]/table/tbody/tr[10]/td[1]/button')
+        rename_last_downloaded_zip(end_let)
+        last = get_last_downloaded_file()
+        if mode == 'TestS':
+            make = True
+            for dir in os.listdir(str(ROOT_DIR) + r"\downloads\\" + r"\test_seg\\" + html.vs_name):
+                if dir == ntpath.basename(str(last).replace('.zip', '')):
+                    make = False
+            if make is True:
+                if ntpath.basename(str(last)).endswith('.zip') is True:
+                    make_dir(str(ROOT_DIR) + r"\downloads\\" + r"\test_seg\\" + html.vs_name + "\\" + ntpath.basename(str(last).replace('.zip', '')))
+                if ntpath.basename(str(last)).endswith('.docx') is True:
+                    make_dir(str(ROOT_DIR) + r"\downloads\\" + r"\test_seg\\" + html.vs_name + "\\" + ntpath.basename(
+                        str(last).replace('.docx', '')))
+        if mode == 'Product':
+            make = True
+            for dir in os.listdir(str(ROOT_DIR) + r"\downloads\\" + r"\pr_seg\\" + html.vs_name):
+                if dir == ntpath.basename(str(last).replace('.zip', '')):
+                    make = False
+            if make is True:
+                if ntpath.basename(str(last)).endswith('.zip') is True:
+                    make_dir(str(ROOT_DIR) + r"\downloads\\" + r"\pr_seg\\" + html.vs_name + "\\" + ntpath.basename(
+                        str(last).replace('.zip', '')))
+                if ntpath.basename(str(last)).endswith('.docx') is True:
+                    make_dir(str(ROOT_DIR) + r"\downloads\\" + r"\pr_seg\\" + html.vs_name + "\\" + ntpath.basename(
+                        str(last).replace('.docx', '')))
+        replace_by_name(html, last)
+        download_by_xpath(html, '//*[@id="infotable"]/table/tbody/tr[11]/td[1]/button')
+        rename_last_downloaded_zip(end_let)
+        last = get_last_downloaded_file()
+        if mode == 'TestS':
+            make = True
+            for dir in os.listdir(str(ROOT_DIR) + r"\downloads\\" + r"\test_seg\\" + html.vs_name):
+                if dir == ntpath.basename(str(last).replace('.zip', '')):
+                    make = False
+            if make is True:
+                if ntpath.basename(str(last)).endswith('.zip') is True:
+                    make_dir(str(ROOT_DIR) + r"\downloads\\" + r"\test_seg\\" + html.vs_name + "\\" + ntpath.basename(
+                        str(last).replace('.zip', '')))
+                if ntpath.basename(str(last)).endswith('.docx') is True:
+                    make_dir(str(ROOT_DIR) + r"\downloads\\" + r"\test_seg\\" + html.vs_name + "\\" + ntpath.basename(
+                        str(last).replace('.docx', '')))
+        if mode == 'Product':
+            make = True
+            for dir in os.listdir(str(ROOT_DIR) + r"\downloads\\" + r"\pr_seg\\" + html.vs_name):
+                if dir == ntpath.basename(str(last).replace('.zip', '')):
+                    make = False
+            if make is True:
+                if ntpath.basename(str(last)).endswith('.zip') is True:
+                    make_dir(str(ROOT_DIR) + r"\downloads\\" + r"\pr_seg\\" + html.vs_name + "\\" + ntpath.basename(
+                        str(last).replace('.zip', '')))
+                if ntpath.basename(str(last)).endswith('.docx') is True:
+                    make_dir(str(ROOT_DIR) + r"\downloads\\" + r"\pr_seg\\" + html.vs_name + "\\" + ntpath.basename(
+                        str(last).replace('.docx', '')))
+        replace_by_name(html, last)
+        download_by_xpath(html, '//*[@id="infotable"]/table/tbody/tr[12]/td[1]/button')
+        rename_last_downloaded_zip(end_let)
+        last = get_last_downloaded_file()
+        if mode == 'TestS':
+            make = True
+            for dir in os.listdir(str(ROOT_DIR) + r"\downloads\\" + r"\test_seg\\" + html.vs_name):
+                if dir == ntpath.basename(str(last).replace('.zip', '')):
+                    make = False
+            if make is True:
+                if ntpath.basename(str(last)).endswith('.zip') is True:
+                    make_dir(str(ROOT_DIR) + r"\downloads\\" + r"\test_seg\\" + html.vs_name + "\\" + ntpath.basename(
+                        str(last).replace('.zip', '')))
+                if ntpath.basename(str(last)).endswith('.docx') is True:
+                    make_dir(str(ROOT_DIR) + r"\downloads\\" + r"\test_seg\\" + html.vs_name + "\\" + ntpath.basename(
+                        str(last).replace('.docx', '')))
+        if mode == 'Product':
+            make = True
+            for dir in os.listdir(str(ROOT_DIR) + r"\downloads\\" + r"\pr_seg\\" + html.vs_name):
+                if dir == ntpath.basename(str(last).replace('.zip', '')):
+                    make = False
+            if make is True:
+                if ntpath.basename(str(last)).endswith('.zip') is True:
+                    make_dir(str(ROOT_DIR) + r"\downloads\\" + r"\pr_seg\\" + html.vs_name + "\\" + ntpath.basename(
+                        str(last).replace('.zip', '')))
+                if ntpath.basename(str(last)).endswith('.docx') is True:
+                    make_dir(str(ROOT_DIR) + r"\downloads\\" + r"\pr_seg\\" + html.vs_name + "\\" + ntpath.basename(
+                        str(last).replace('.docx', '')))
+        replace_by_name(html, last)
     html.browser.close()
     html.browser.switch_to.window(main_window)
     time.sleep(0.1)
-    if need_name is True:
+    if mode == 'Name':
         return name
 
+def make_dir(name):
+    try:
+        os.mkdir(name)
+    except:
+        pass
 
 def get_newsname(html):
     try:
@@ -214,12 +356,99 @@ def make_html_text(text_list):
     name.append('</h2>')
     return name
 
-def check_vs(vs_info, name):
+def check_vs(html, vs_info, name):
     tmp = (name.replace('<h3> Новость содержит информацию о следующем ВС - ', '')).replace(' </h3>', '')
     for vs_name in vs_info.items():
-        if tmp == vs_name[1]:
-            return vs_name[0]
+        for name in vs_name[1]:
+            if tmp == name:
+                ind = vs_name[1].index(name)
+                code_list = vs_info['Код']
+                test_vs_list = vs_info['Ссылка на описание тестового ВС']
+                product_vs_list = vs_info['Ссылка на описание продуктивного ВС']
+                if (test_vs_list[ind] != '') & (html.test_seg == "Yes"):
+                    open_tab(html, test_vs_list[ind], 'TestS')
+                if (product_vs_list[ind] != '') & (html.pr_seg == "Yes"):
+                    open_tab(html, product_vs_list[ind], 'Product')
+                return code_list[ind]
     return ""
+
+def excel_work(html, vs_info):
+    for vs_name in vs_info.items():
+        for name in vs_name[1]:
+            ind = vs_name[1].index(name)
+            html.vs_name = name
+            code_list = vs_info['Код']
+            test_vs_list = vs_info['Ссылка на описание тестового ВС']
+            product_vs_list = vs_info['Ссылка на описание продуктивного ВС']
+            if ((str(test_vs_list[ind]) != 'nan') & (html.test_seg == "Yes")):
+                make_dir(str(ROOT_DIR) + r"\downloads\\" + r"test_seg\\" + html.vs_name)
+                open_tab(html, test_vs_list[ind], 'TestS')
+            if ((str(product_vs_list[ind]) != 'nan') & (html.pr_seg == "Yes")):
+                make_dir(str(ROOT_DIR) + r"\downloads\\" + r"pr_seg\\" + html.vs_name)
+                open_tab(html, product_vs_list[ind], 'Product')
+        if html.test_seg == "Yes":
+            for dirs in os.listdir((str(ROOT_DIR) + r"\downloads\\" + r"test_seg\\")):
+                for dir in os.listdir((str(ROOT_DIR) + r"\downloads\\" + r"test_seg\\" + dirs + "\\")):
+                    comparing_for_vs((str(ROOT_DIR) + r"\downloads\\" + r"test_seg\\" + dirs + "\\") + dir, 'test')
+            if test_info_comp != []:
+                for mail in html.dest_mails:
+                    send_email(make_html_text(test_info_comp), mail, "Тестовый сегмент_" + html.mail_subject, "comparing", html.send_addr, html.send_password)
+                    #comparing(str(ROOT_DIR) + r"\downloads\test_seg\\" + name)
+        if html.pr_seg == "Yes":
+            for dirs in os.listdir((str(ROOT_DIR) + r"\downloads\\" + r"pr_seg\\")):
+                for dir in os.listdir((str(ROOT_DIR) + r"\downloads\\" + r"pr_seg\\" + dirs + "\\")):
+                    comparing_for_vs((str(ROOT_DIR) + r"\downloads\\" + r"pr_seg\\" + dirs + "\\") + dir, 'pr')
+            if pr_info_comp != []:
+                for mail in html.dest_mails:
+                    send_email(make_html_text(pr_info_comp), mail, "Продуктивный сегмент_" + html.mail_subject, "comparing", html.send_addr, html.send_password)
+                #comparing(str(ROOT_DIR) + r"\downloads\pr_seg\\")
+        break
+    return ""
+
+def comparing_for_vs(path, type):
+    files_in_dir = []
+    last = ''
+    for root, dirs, files in os.walk(path):
+        for file in files:
+            for cmp in files:
+                if (cmp != file) & (cmp != last):
+                    filecmp.clear_cache()
+                    ch = (filecmp.cmp(path + '\\' + file, path + '\\' + cmp, shallow=False))
+                    #filecompare(path + '\\' + file, path + '\\' + cmp)
+                    if ch is False:
+                        z1_u = zip_unicode.ZipHandler(path + '\\' + file)
+                        z2_u = zip_unicode.ZipHandler(path + '\\' + cmp)
+                        z1_u.extract_all()
+                        z2_u.extract_all()
+                        dcmp = filecmp.dircmp(path + '\\' + file.replace('.zip', ''),
+                                              path + '\\' + cmp.replace('.zip', ''))
+                        for fd, subfds, fns in os.walk(path + '\\' +
+                                                   file.replace('.zip', '')):
+                            for fn in fns:
+                                 for fd2, subfds2, fns2 in os.walk(path + '\\' + cmp.replace('.zip', '')):
+                                    for fn2 in fns2:
+                                        if similar(fn, fn2) >= 0.95:
+                                            if filecmp.cmp(os.path.join(fd, fn),
+                                                       os.path.join(fd2, fn2),
+                                                       shallow=False) is False:
+                                                if type == 'test':
+                                                    test_info_comp.append("Файл " + str(fn) + " в " + str(file) + " изменен.")
+                                                if type == 'pr':
+                                                    pr_info_comp.append(
+                                                        "Файл " + str(fn) + " в " + str(file) + " изменен.")
+                        shutil.rmtree(path + '\\' + file.replace('.zip', ''))
+                        shutil.rmtree(path + '\\' + cmp.replace('.zip', ''))
+            last = file
+
+def download_by_xpath(html, xpath):
+    try:
+        html.browser.find_element_by_xpath(xpath).click()
+        logger.info("Загрузка данных со страницы " + html.browser.current_url + ' ' + str(
+            datetime.datetime.now()))
+    except:
+        logger.exception("Возникла ошибка при загрузке данных со страницы " + html.browser.current_url + ' ' + str(datetime.datetime.now()))
+    downloads_done()
+    time.sleep(1)
 
 def check_news(name):
     if os.stat(str(ROOT_DIR) + r"\information" + r"\news.txt").st_size == 0:
@@ -296,35 +525,62 @@ def change_name(name):
     name = name.decode(encoding)
     return name
 
-def comparing():
+def replace_by_name(html, name):
+    if str(name).endswith('test_seg.zip'):
+        shutil.copyfile(name, str(ROOT_DIR) + r"\downloads\test_seg\\" + html.vs_name + r'\\' + str(ntpath.basename(name)).replace('.zip', '') + r'\\' + str(ntpath.basename(name)).replace('.zip', str(datetime.datetime.now().strftime("%d-%m-%Y_%H-%M-%S")) + '.zip'), follow_symlinks=True)
+        os.remove(name)
+        remain_2_last(str(ROOT_DIR) + r"\downloads\test_seg\\" + html.vs_name + r'\\' + str(ntpath.basename(name)).replace('.zip', ''))
+    if str(name).endswith('productive_seg.zip'):
+        shutil.copyfile(name, str(ROOT_DIR) + r"\downloads\pr_seg\\" + html.vs_name + r'\\' + str(ntpath.basename(name)).replace('.zip', '') + r'\\' + str(ntpath.basename(name)).replace('.zip', str(datetime.datetime.now().strftime("%d-%m-%Y%H-%M-%S")) + '.zip'), follow_symlinks=True)
+        os.remove(name)
+        remain_2_last(str(ROOT_DIR) + r"\downloads\pr_seg\\" + html.vs_name + r'\\' + str(ntpath.basename(name)).replace('.zip', ''))
+    if str(name).endswith('test_seg.docx'):
+        shutil.copyfile(name, str(ROOT_DIR) + r"\downloads\test_seg\\" + html.vs_name + r'\\' + str(ntpath.basename(name)).replace('.docx', '') + r'\\' + str(ntpath.basename(name)).replace('.docx', str(datetime.datetime.now().strftime("%d-%m-%Y_%H-%M-%S")) + '.docx'), follow_symlinks=True)
+        os.remove(name)
+        remain_2_last(str(ROOT_DIR) + r"\downloads\test_seg\\" + html.vs_name + r'\\' + str(ntpath.basename(name)).replace('.docx', ''))
+    if str(name).endswith('productive_seg.docx'):
+        shutil.copyfile(name, str(ROOT_DIR) + r"\downloads\pr_seg\\" + html.vs_name + r'\\' + str(ntpath.basename(name)).replace('.docx', '') + r'\\' + str(ntpath.basename(name)).replace('.docx', str(datetime.datetime.now().strftime("%d-%m-%Y%H-%M-%S")) + '.docx'), follow_symlinks=True)
+        os.remove(name)
+        remain_2_last(str(ROOT_DIR) + r"\downloads\pr_seg\\" + html.vs_name + r'\\' + str(ntpath.basename(name)).replace('.docx', ''))
+
+
+def comparing(path):
     files_in_dir = []
-    for root, dirs, files in os.walk(str(ROOT_DIR) + r"\downloads"):
+    for root, dirs, files in os.walk(path):
+        if str(root).find('pr_seg') >= 0: continue
+        if str(root).find('test_seg') >= 0: continue
         for filename in files:
             if check_temp(filename):
                 for dir_file in files_in_dir:
                     if similar(filename, dir_file) >= 0.9:
                         if filename.endswith('.zip') & dir_file.endswith('.zip'):
-                            if filecmp.cmp(str(ROOT_DIR) + r"\downloads\\" + filename,
-                                           str(ROOT_DIR) + r"\downloads\\" + dir_file, shallow=False) is False:
+                            if filecmp.cmp(path + filename,
+                                           path + dir_file, shallow=False) is False:
                                 if dir_file.startswith('AF.2.65d') or filename.startswith('AF.2.65d'):
                                     info_comp.append('В архиве ' + filename + ' замечены изменеия.')
                                 else:
-                                    z1_u = zip_unicode.ZipHandler(str(ROOT_DIR) + r"\downloads\\" + filename)
-                                    z2_u = zip_unicode.ZipHandler(str(ROOT_DIR) + r"\downloads\\" + dir_file)
+                                    z1_u = zip_unicode.ZipHandler(path + filename)
+                                    z2_u = zip_unicode.ZipHandler(path + dir_file)
                                     z1_u.extract_all()
                                     z2_u.extract_all()
-                                    dcmp = filecmp.dircmp(str(ROOT_DIR) + r"\downloads\\" + filename.replace('.zip', ''),
-                                                          str(ROOT_DIR) + r"\downloads\\" + dir_file.replace('.zip', ''))
+                                    dcmp = filecmp.dircmp(path + filename.replace('.zip', ''),
+                                                          path + dir_file.replace('.zip', ''))
                                     if dcmp.left_only != []:
                                         for lefts in dcmp.left_only:
-                                            info_comp.append('В архиве ' + filename + ' присутсвует файл ' + lefts + ', который отсутсвует в ' + dir_file + ' ' + '\n')
+                                            if path == str(ROOT_DIR) + r"\downloads\pr_seg\\":
+                                                pr_info_comp.append(
+                                                    'В архиве ' + filename + ' присутсвует файл ' + lefts + ', который отсутсвует в ' + dir_file + ' ' + '\n')
+                                            if path == str(ROOT_DIR) + r"\downloads\test_seg\\":
+                                                test_info_comp.append(
+                                                    'В архиве ' + filename + ' присутсвует файл ' + lefts + ', который отсутсвует в ' + dir_file + ' ' + '\n')
+                                            else: info_comp.append('В архиве ' + filename + ' присутсвует файл ' + lefts + ', который отсутсвует в ' + dir_file + ' ' + '\n')
                                     if dcmp.right_only != []:
                                         for rights in dcmp.right_only:
                                             info_comp.append('В архиве ' + dir_file + 'присутсвует файл ' + rights + ', который отсутсвует в ' + filename + ' ' + '\n')
-                                    for fd, subfds, fns in os.walk(str(ROOT_DIR) + r"\downloads\\" +
+                                    for fd, subfds, fns in os.walk(path +
                                                                            filename.replace('.zip', '')):
                                         for fn in fns:
-                                            for fd2, subfds2, fns2 in os.walk(str(ROOT_DIR) + r"\downloads\\" + dir_file.replace('.zip', '')):
+                                            for fd2, subfds2, fns2 in os.walk(path + dir_file.replace('.zip', '')):
                                                 for fn2 in fns2:
                                                     if similar(fn, fn2) >= 0.95:
                                                         if filecmp.cmp(os.path.join(fd,fn),
@@ -334,10 +590,10 @@ def comparing():
                                                                 compare_name = ntpath.basename(compare_docs(fn, fn2, os.path.join(fd,fn),os.path.join(fd2, fn2)))
                                                                 info_comp.append(
                                                                     'В архиве ' + dir_file + ' обнаружены изменения файла ' + fn + ' изменения записаны в прикрепленный файл ' + compare_name + '\n')
-                                shutil.rmtree(str(ROOT_DIR) + r"\downloads\\" + filename.replace('.zip', ''))
-                                shutil.rmtree(str(ROOT_DIR) + r"\downloads\\" + dir_file.replace('.zip', ''))
+                                shutil.rmtree(path + filename.replace('.zip', ''))
+                                shutil.rmtree(path + dir_file.replace('.zip', ''))
                             else:
-                                os.remove(str(ROOT_DIR) + r"\downloads\\" + filename)
+                                os.remove(path + filename)
                         else:
                             if filename.endswith('.docx') & dir_file.endswith('.docx') & (filename.endswith('_Comparison.docx') is False) & (dir_file.endswith('_Comparison.docx') is False):
                                 try:
@@ -345,7 +601,6 @@ def comparing():
                                 except:
                                     logger.exception("Возникла ошибка при работе с файлами " + filename + ' и ' + dir_file + ' ' + str(datetime.datetime.now()))
                 files_in_dir.append(filename)
-
 
 def get_content(html):
     news = []
@@ -405,10 +660,10 @@ def get_content(html):
                                 if(similar(a.text, "ссылке") >= 0.9):
                                     links_with_text.append(a['href'])
                     if links_with_text != []:
-                        name = open_tab(html, links_with_text[0], True)
+                        name = open_tab(html, links_with_text[0], 'Name')
                     else:
                         name = ''
-                    vs_add = check_vs(vs_info, name)
+                    vs_add = check_vs(html, vs_info, name)
                     if vs_add != '':
                         name = name + "Данные найдены в таблице видов сведений со следующим кодом - " + vs_add
                     else:
@@ -429,8 +684,10 @@ def get_content(html):
             except (NoSuchElementException, ElementClickInterceptedException, TimeoutException):
                 break
             i += 1
-            print(news)
             time.sleep(0.1)
+        excel_work(html, vs_info)
+        #for file in os.listdir(str(ROOT_DIR) + r"\downloads\\"):
+         #   replace_by_name(str(ROOT_DIR) + r"\downloads\\" + file)
     if html.link == 'https://dom.gosuslugi.ru/#!/regulations':
         i = 1
         j = 2
@@ -480,7 +737,7 @@ def get_content(html):
                                 regex = r'[^/\\&\?]+\.\w{3,4}(?=([\?&].*$|$))'
                                 file_name = re.search(regex, a['href']).group(0)
                                 if check_file(file_name) is False:
-                                    open_tab(html, 'https://fssp.gov.ru/' + a['href'], False)
+                                    open_tab(html, 'https://fssp.gov.ru/' + a['href'], '')
                             if similar(a.text, test2) >= 0.9:
                                 get_xml(html, 'https://fssp.gov.ru/' + a['href'])
                         downloads_done()
@@ -491,7 +748,7 @@ def get_content(html):
         tmp = ('Альбомформатов 2.65д')
         for a in items.find_all('a', href=True):
             if re.sub("^\s+|\n|\r|\s+$", '', a.text).replace('	', '').startswith(tmp):
-                open_tab(html, 'https://pfr.gov.ru' + a['href'], False)
+                open_tab(html, 'https://pfr.gov.ru' + a['href'], '')
                 downloads_done()
     return news
 
@@ -530,15 +787,18 @@ def send_email(news, toaddr, subject, msg_type, sender, passw):
     msg['To'] = toaddr
     if msg_type == "comparing":
         if files_to_send != []:
+            last = ''
             for file_n in files_to_send:
-                attach = MIMEApplication(open(file_n, 'rb').read())
-                attach.add_header('Content-Disposition', 'attachment', filename = ntpath.basename(file_n))
-                msg.attach(attach)
+                if file_n != last:
+                    attach = MIMEApplication(open(file_n, 'rb').read())
+                    attach.add_header('Content-Disposition', 'attachment', filename = ntpath.basename(file_n))
+                    msg.attach(attach)
+                last = file_n
     try:
         server.sendmail(email_str, toaddr, msg.as_string())
         logger.info("Сообщение успешно отправлено")
-    except (SMTPDataError):
-        logger.exception("Сообщение не доставлено, проверьте работоспособность исходящего адреса.")
+    except (SMTPDataError, smtplib.SMTPSenderRefused):
+        logger.exception("Сообщение не доставлено, проверьте работоспособность исходящего адреса, размер вложения слишком велик.")
     server.quit()
 
 def end_delete():
@@ -567,6 +827,7 @@ def similar(a, b):
 def compare_docs(doc1, doc2, path1 , path2):
     path = str(ROOT_DIR) + r"\downloads\\"
     word = win32com.client.gencache.EnsureDispatch("Word.Application")
+    word.Visible = True
     path1 = path1.replace(str(doc1), '') + r"\\"
     path2 = path2.replace(str(doc2), '') + r"\\"
     word.CompareDocuments(word.Documents.Open(path1 + str(doc1)),
@@ -585,6 +846,15 @@ def init_delete():
         for filename in files:
             if filename.endswith("_Comparison.docx"):
                 os.remove(str(ROOT_DIR) + r"\downloads\\" + filename)
+            else:
+                if filename.endswith("(1).docx"):
+                    os.remove(str(ROOT_DIR) + r"\downloads\\" + filename)
+
+def test():
+    path = str(ROOT_DIR) + r"\information" + r"\Виды сведений.xlsx"
+    vs_info = excel_connect(path)
+    html = web('https://smev3.gosuslugi.ru/portal/news.jsp')
+    check_vs(html, vs_info, path)
 
 def newparser():
     logger.info("Программа запущена. " + str(datetime.datetime.now()))
@@ -599,12 +869,16 @@ def newparser():
         mail_subject = config["e_mail"]["msg_subject"]
         send_addr = config["e_mail"]["send_addr"]
         send_password = config["e_mail"]["send_password"]
+        test_seg = config["excel"]["test_ct"]
+        pr_seg = config["excel"]["product_ct"]
     except:
         my_list = []
         dest_mails = []
         mail_subject = ""
         send_addr = ''
         send_password = ''
+        test_seg = ""
+        pr_seg = ""
         logger.exception("Не удалось считать данный из конфигурационного файла. " + str(datetime.datetime.now()))
     for link in my_list:
         smev3_news = []
@@ -612,6 +886,10 @@ def newparser():
         if link == 'https://smev3.gosuslugi.ru/portal/news.jsp' or link == 'https://smev3.gosuslugi.ru/portal':
             send_news = True
         html = web(link)
+        html.mail_subject = mail_subject
+        html.dest_mails = dest_mails
+        html.send_addr = send_addr
+        html.send_password = send_password
         if link == 'https://smev3.gosuslugi.ru/portal/news.jsp':
             themes = get_themes(html)
             to_cfg = '' 
@@ -629,6 +907,8 @@ def newparser():
                     continue
         else:
             html.filter = False
+        html.pr_seg = pr_seg
+        html.test_seg = test_seg
         smev3_news += get_content(html)
         if send_news is True:
             if smev3_news != []:
@@ -638,12 +918,26 @@ def newparser():
                 logger.info("На странице " + link + " новых новостей не обнаружено. " + str(datetime.datetime.now()))
         del html
         time.sleep(0.1)
-    comparing()
+    comparing(str(ROOT_DIR) + r"\downloads\\")
     if info_comp != []:
+        jkh_cmp = []
+        other_cmp = []
+        last = ''
         for mail in dest_mails:
-            send_email(make_html_text(info_comp), mail, mail_subject, "comparing", send_addr, send_password)
+            for cmp in info_comp:
+                if cmp != last:
+                    if str(cmp).find("ГИС") >= 0:
+                        jkh_cmp.append(cmp)
+                    else:
+                        other_cmp.append(cmp)
+                last = cmp
+            if jkh_cmp != []:
+                send_email(make_html_text(jkh_cmp), mail, mail_subject, "jkh", send_addr, send_password)
+            if other_cmp != []:
+                send_email(make_html_text(other_cmp), mail, mail_subject, "comparing", send_addr, send_password)
     else:
         logger.info("Новых версий файлов не обнаружено." + str(datetime.datetime.now()))
     end_delete()
     logger.info("Программа выполнена. " + str(datetime.datetime.now()) + '\n')
+    #test()
 newparser()
